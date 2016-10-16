@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<title>GameBook</title>
+
+<!--Boostrap for columed sections -->
+	<link rel="stylesheet" href="https://s3.amazonaws.com/codecademy-content/projects/bootstrap.min.css">
+<!--css files-->
+	<link rel="stylesheet" type="text/css" href="css/main.css">
+	<link rel="stylesheet" type="text/css" href="css/index.css">
+
+	<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+
+	<script type='text/javascript' src="js/main.js"></script>
+	<script type='text/javascript' src="js/model/items.js"></script>
+	<script type='text/javascript' src="js/model/characters.js"></script>
+	<script type='text/javascript' src="js/controllers/controller.js"></script>
+
+
+</head>
+<body>
+
+<!-- Jumbotron for skyline to be behind header -->
+ 	<div class="jumbotron">
+<!-- Header section (will have it hide with Jquery as you scroll down page) -->
+			<div class="header">
+				<div class="container-fluid">
+					<!-- logo section fixed sized -->
+					<div class="row">
+						<div class=" col-xs-6 .col-sm-6 col-md-6">
+							<a href="index.html"><div class="titleLogo"> 
+									<div class="logo"><img src="img/LRS_Logo.png" class="img-circle"></div>
+									<p class="title">  Little Rocket Studio </p>
+								</div></a>
+						</div>
+						<!-- Right side NAV bar -->
+						<div class=" col-xs-6 .col-sm-6 col-md-6">			
+							<ul class="navagation" >
+								<li class="menu" > <a class="links" href="pages/About.html"> About </a> </li>
+								<!-- Portfolio is a dropdrop (Jquery) for multi-selection -->
+								<li class="menu" class="dropdown">
+								<a class="links" class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" > Portfolio <!-- (later accordian) --> <span class="caret"> </span></a>
+									<ul class="dropdown-menu">
+										<li> <a href="#"> Software Development </a> </li> 
+										<li> <a href="#"> Game Development </a> </li> 
+										<li> <a href="#"> Web Development </a> </li> 
+										<li> <a href="#"> Graphic Design </a> </li>  
+									</ul>
+							    </li>
+								<li class="menu" > <a class="links" href="pages/Contact.html"> Contact </a> </li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		<!-- Jumbo Title ( words displayed in middle of city) -->
+		<div class="container-fluid">
+			<div class="row">
+				<div class="Jumbo-title">
+					<h2> <strong> Lawrence Goedrich's choose your own adventure game. Codeacademy Javascript final project.  </strong> </h2>
+				</div>
+
+				<div class=" col-xs-8 .col-sm-8 col-md-8">
+					<div id="spaceship">
+					<a style="font-size: 10px" href="http://mccullough.deviantart.com/art/Space-Cowboy-208681546" target="_blank"> Art link</a>
+					</div>
+				</div>
+
+				<div class=" col-xs-4 .col-sm-4 col-md-4">
+					<div id="profile_image">
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<form class='box'>
+		<input type='text' id='action' class='interact' autocomplete='off'>
+		<button type='submit' style='display: none';></button>
+	</form>
+
+	<div class='box dialogue'>
+		<p style='color:black'>
+			
+		</p>
+	</div>
+
+
+
+
+
+
+
+	<!-- footer (shameless tradmark and social meadia plugs) -->
+	<div class="footer">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-xs-6 .col-sm-6 col-md-6">
+					<div class="copyRightSpot">
+						<p>&copy; 2016 Little Rocket Studio</p>
+					</div>
+				</div>
+
+				<div class="col-xs-6 .col-sm-6 col-md-6">
+					<ul>
+						<li class="socialMedia"> <a id="Twitter" href="https://twitter.com/GLnore" target="_blank"> <img src="http://icons.iconarchive.com/icons/iconshots/social-media-network/32/twitter-icon.png"/> </a> </li>
+						<li class="socialMedia"> <a id="Facebook" href="https://www.facebook.com/Xicor" target="_blank"> <img src="https://beatty.house.gov/profiles/congress/modules/contrib/socialmedia/icons/levelten/glossy/32x32/facebook.png"/> </a> </li>
+						<li class="socialMedia"> <a id="Fiverr" href="https://www.fiverr.com/lawrence_lrs" target="_blank"> <img src="http://www.icon100.com/up/2904/32/fiverr.png"/> </a> </li>
+						<li class="socialMedia"> <a id="Etsy" href="https://www.etsy.com/people/LittleRocketStudio" target="_blank"> <img src="http://icons.iconarchive.com/icons/limav/flat-gradient-social/32/Etsy-icon.png"/> </a> </li>
+						<li class="socialMedia"> <a id="Linkedin" href="https://www.linkedin.com/in/lawrence-goedrich-55b22940" target="_blank"> <img src="http://www.arabsocialmediareport.com/images/linkedin.png"/> </a> </li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<!-- image overlay for character selection -->
+	<div class="overlay">
+		<div class="container-fluid">
+			<div class="row">
+				<div class="col-xs-4 .col-sm-4 col-md-4">
+					<div class="Lcharacterimg">
+						<div class="img-thumbnail" id="rouge"></div>
+						<div class="caption">
+							<h4 class="third_WD_title"> Rouge </h4>
+						</div>
+					</div>
+				</div>
+		
+				<div class="col-xs-4 .col-sm-4 col-md-4">
+					<div class="Ccharacterimg">
+						 <div class="img-thumbnail" id="soldier"></div>
+						<div class="caption">
+							<h4 class="third_WD_title"> Soldier </h4>
+						</div>
+					</div>
+				</div>
+		
+				<div class="col-xs-4 .col-sm-4 col-md-4">
+					<div class="Rcharacterimg">
+						<div class="img-thumbnail" id="tank"></div>
+						<div class="caption">
+							<h4 class="third_WD_title"> Tank </h4>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="startOverlay">
+		<div class="container-fluid">
+			<button id="start" type="button" class="btn btn-secondary btn-lg">Start</button>
+		</div>
+	</div>	
+
+
+
+
+</body>
+</html>

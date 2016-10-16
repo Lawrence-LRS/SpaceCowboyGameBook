@@ -1,0 +1,175 @@
+html, body {
+  font-family: 'Merriweather', serif;	
+  margin: 0;
+  padding: 0;
+}
+
+/* *{border: 1px dashed blue;
+}
+*/
+/*Header information ALL PAGES*/
+.header{
+	background-color: rgba(0,0,0,.5);
+	height: 100px;
+	
+	margin: -50px -30px 0 -30px;
+	min-width: 750px;
+/*	position:fixed; when I get Jquery added will hide 
+on scroll down and appear on scroll up
+ unless top pixel =0*/
+}
+
+.header .logo{
+	float:left;
+
+	height:75px;
+	width:75px;
+
+	margin-top: -10px;
+
+}
+
+.header .title{
+	text-align: center;
+	font-size:24px;
+	margin-left: 50px;
+	margin-top: -9px;
+	color: white;
+	max-width: 275px;
+	position:relative;
+}
+
+.header .titleLogo{
+	margin-top: 35px;
+}
+
+
+.header .navagation{
+	float:right;
+	list-style-type: none;
+	text-align: center;
+	margin: 0;
+    padding: 0;
+	margin-top:20px;
+	font-size: 24px;
+}
+
+.header .menu{
+	border: 1px solid black;
+	border-radius:5px;
+	display:inline;
+	margin:0 5px 0 5px;
+	padding:0 5px 0 5px;
+}
+/* more to be done with button hovers */
+.header .menu:hover{
+	background-color: black;
+}
+
+.header .links{
+	text-decoration: none;
+	color:white;
+}
+
+.jumbotron{
+  height: 500px;
+
+  margin:0;
+  padding-bottom: -30px;
+}
+
+.Jumbo-title{
+  position: relative;
+  margin-top: 325px;
+}
+
+.Jumbo-title h2{
+  color: white;
+  text-align: center;
+  min-width: 550px;
+  max-width: 700px;
+  margin: auto;
+}
+
+
+
+
+
+#spaceship{
+	background-image: url("../img/imageToCome.jpg");
+	background-position:center;
+	background-size:cover;
+/*	width:300px;
+	height:300px;*/
+}
+
+
+
+#profile_image{
+	background-image: url("../img/imageToCome.jpg");
+	background-position:center;
+	background-size:cover;
+/*	width:300px;
+	height:300px;*/
+}
+
+
+
+
+
+
+
+
+.box {
+	width: 50%;
+	margin: 0px auto;
+}
+
+.interact {
+    text-align: center;
+    width: 100%;
+    background-color: rgba(0,0,0,.5);
+    opacity: 0.5;
+    font-family: 'zeyada', cursive;
+}
+
+.interact:focus {
+    outline: none;
+}
+
+.dialogue, .interact {
+	font-size: 24px;
+	font-weight: bold;
+}
+
+
+
+
+
+
+
+
+
+
+
+/*Footer section for copyright image placement and colors*/
+.footer{
+	background-color: #C0C0C0;
+	color:white;
+	position: relative;
+   	min-width: 750px;
+   	height:45px;
+}
+.copyRightSpot{
+	margin-top:10px;
+}
+
+.socialMedia{
+	border: 1px solid black;
+	border-radius:5px;
+	display:inline;
+	margin:0 5px 0 5px;
+	margin-top:5px;
+	padding-top:0;
+	float:right;
+}
