@@ -2,6 +2,7 @@ html, body {
   font-family: 'Merriweather', serif;	
   margin: 0;
   padding: 0;
+  background-color: black;
 }
 
 /* *{border: 1px dashed blue;
@@ -9,7 +10,7 @@ html, body {
 */
 /*Header information ALL PAGES*/
 .header{
-	background-color: rgba(0,0,0,.5);
+	background-color: #333A49;
 	height: 100px;
 	
 	margin: -50px -30px 0 -30px;
@@ -73,9 +74,10 @@ on scroll down and appear on scroll up
 
 .jumbotron{
   height: 500px;
-
+  background-color: black;
   margin:0;
   padding-bottom: -30px;
+  border-bottom: 4px rgb(58, 252, 0) solid;
 }
 
 .Jumbo-title{
@@ -96,11 +98,11 @@ on scroll down and appear on scroll up
 
 
 #spaceship{
-	background-image: url("../img/imageToCome.jpg");
+	background-image: url("../img/space_cowboy_by_mccullough.jpg");
 	background-position:center;
 	background-size:cover;
-/*	width:300px;
-	height:300px;*/
+	width: 300px;
+	height: 300px;
 }
 
 

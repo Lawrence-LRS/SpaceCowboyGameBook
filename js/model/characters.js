@@ -66,8 +66,9 @@
 function character(name, type){
 	this.name = name;
 	this.type = type;
+	this.voice = 'blue';
 
-	this.weapon = weapon(0);
+	this.weapon = new weapons(0);
 	this.consumable;
 	this.amulet;
 	this.shield;
@@ -109,15 +110,15 @@ switch(type) {
 		this.ranged = false;
     break;
 
-    case "april":
-    // god class + all good, all weapons
-	    hpMod = +50;
-		mvspeedMod = 5;
-		evasionMod = .5;
-		criticalMod = .5;
-		this.dual = true;
-		this.ranged = true;
-    break;
+  //   case "april":
+  //   // god class + all good, all weapons
+	 //    hpMod = +50;
+		// mvspeedMod = 5;
+		// evasionMod = .5;
+		// criticalMod = .5;
+		// this.dual = true;
+		// this.ranged = true;
+  //   break;
 }
 	
 	this.hpmax = 100 + hpMod;
@@ -130,33 +131,33 @@ switch(type) {
 };
 
 // creating companion character with stats. ( has increased damage ranged weapon )
-function John(){
+function Companion() {
 	this.name =  "John";
+	this.voice = 'green';
 	this.health= 200;
 	this.evasion = .2;
 	this.criticalHit = .2;
-	this.weapon(6);
+	this.weapons(6);
 }
 
 //so I can call monster and either roll for difficulty or just call them out
-function monster(difficulty)
-{
-
+function Monster(difficulty) {
+this.voice = 'red';
 switch (difficulty)
 {
-	case 1:
+	case 0:
 		this.name = "Blood Hound";
 		this.damageM = 25;
 		this.health= 200;
 	break;
 
-	case 2:
+	case 1:
 		this.name = "Roachling";
 		this.damageM = 20;
 		this.health= 300;
 	break;
 
-	case 3:
+	case 2:
 		this.name = "Ashserpent";
 		this.damageM = 35;
 		this.health= 150;
@@ -166,12 +167,13 @@ switch (difficulty)
 }
 
 // creating the object for the end game boss fight
-function monsterBoss(sittight){
+function monsterBoss(sittight) {
 	this.name = "THE DEMIGORGON";
+	this.voice = 'red';
 	this.damageM = 25;
 	this.damageR = 50;
 	this.health = 200;
-
+ 
 // one game victory mode is to ignore all signs of danger, John will appear on the deck and the 
 // DEMIGORGON wont show herself, sittight is a counter for ignored warnings.
 	if (sittight == 5)

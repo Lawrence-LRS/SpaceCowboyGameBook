@@ -9,9 +9,9 @@
 <!--css files-->
 	<link rel="stylesheet" type="text/css" href="css/main.css">
 	<link rel="stylesheet" type="text/css" href="css/index.css">
-
-	<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
-
+<!-- J-Query -->
+	<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+<!-- Javascript -->
 	<script type='text/javascript' src="js/main.js"></script>
 	<script type='text/javascript' src="js/model/items.js"></script>
 	<script type='text/javascript' src="js/model/characters.js"></script>
@@ -24,44 +24,37 @@
 <!-- Jumbotron for skyline to be behind header -->
  	<div class="jumbotron">
 <!-- Header section (will have it hide with Jquery as you scroll down page) -->
-			<div class="header">
-				<div class="container-fluid">
-					<!-- logo section fixed sized -->
-					<div class="row">
-						<div class=" col-xs-6 .col-sm-6 col-md-6">
-							<a href="index.html"><div class="titleLogo"> 
-									<div class="logo"><img src="img/LRS_Logo.png" class="img-circle"></div>
-									<p class="title">  Little Rocket Studio </p>
-								</div></a>
-						</div>
-						<!-- Right side NAV bar -->
-						<div class=" col-xs-6 .col-sm-6 col-md-6">			
-							<ul class="navagation" >
-								<li class="menu" > <a class="links" href="pages/About.html"> About </a> </li>
-								<!-- Portfolio is a dropdrop (Jquery) for multi-selection -->
-								<li class="menu" class="dropdown">
-								<a class="links" class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" > Portfolio <!-- (later accordian) --> <span class="caret"> </span></a>
-									<ul class="dropdown-menu">
-										<li> <a href="#"> Software Development </a> </li> 
-										<li> <a href="#"> Game Development </a> </li> 
-										<li> <a href="#"> Web Development </a> </li> 
-										<li> <a href="#"> Graphic Design </a> </li>  
-									</ul>
-							    </li>
-								<li class="menu" > <a class="links" href="pages/Contact.html"> Contact </a> </li>
-							</ul>
-						</div>
+		<div class="header">
+			<div class="container-fluid">
+				<!-- logo section fixed sized -->
+				<div class="row">
+					<div class=" col-xs-6 .col-sm-6 col-md-6">
+						<a href="index.html"><div class="titleLogo"> 
+								<div class="logo"><img src="img/LRS_Logo.png" class="img-circle"></div>
+								<p class="title">  Little Rocket Studio </p>
+							</div></a>
+					</div>
+					<!-- Right side NAV bar -->
+					<div class=" col-xs-6 .col-sm-6 col-md-6">			
+						<ul class="navagation" >
+							<li class="menu" > <a class="links" href="pages/About.html"> About </a> </li>
+							<!-- Portfolio is a dropdrop (Jquery) for multi-selection -->
+							<li class="menu" class="dropdown">
+							<a class="links" class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" > Portfolio <!-- (later accordian) --> <span class="caret"> </span></a>
+								<ul class="dropdown-menu">
+									<li> <a href="#"> Software Development </a> </li> 
+									<li> <a href="#"> Game Development </a> </li> 
+									<li> <a href="#"> Web Development </a> </li> 
+									<li> <a href="#"> Graphic Design </a> </li>  
+								</ul>
+						    </li>
+							<li class="menu" > <a class="links" href="pages/Contact.html"> Contact </a> </li>
+						</ul>
 					</div>
 				</div>
 			</div>
 
-		<!-- Jumbo Title ( words displayed in middle of city) -->
-		<div class="container-fluid">
 			<div class="row">
-				<div class="Jumbo-title">
-					<h2> <strong> Lawrence Goedrich's choose your own adventure game. Codeacademy Javascript final project.  </strong> </h2>
-				</div>
-
 				<div class=" col-xs-8 .col-sm-8 col-md-8">
 					<div id="spaceship">
 					<a style="font-size: 10px" href="http://mccullough.deviantart.com/art/Space-Cowboy-208681546" target="_blank"> Art link</a>
@@ -74,7 +67,21 @@
 					</div>
 				</div>
 			</div>
+
 		</div>
+
+
+		
+		<!-- Jumbo Title ( words displayed in middle of city) -->
+		<div class="container-fluid">
+			<div class="row">
+				<div class="Jumbo-title">
+					<h2> <strong> Lawrence Goedrich's choose your own adventure game. Codeacademy Javascript final project.  </strong> </h2>
+				</div>
+			</div>
+		</div>
+
+
 	</div>
 
 	<form class='box'>

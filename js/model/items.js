@@ -25,10 +25,8 @@
 
 
 //weapon objects
-function weapon(type)
-{
-	switch(type) 
-	{
+function weapons(num) {
+	switch(num) {
 		case 0:
 			this.name =  "FIST OF FURRY";
 			this.damage = 10;
@@ -67,11 +65,9 @@ function weapon(type)
 }
 
 // Amulet objects
-function Amulet (type)
-{
+function Amulet (num) {
 
-	switch(type)
-	{
+	switch(num) {
     case 0:
     // amulet that increases characters critical hit mod
 	// Critical Hit : +25%   
@@ -102,11 +98,9 @@ function Amulet (type)
 	}
 }
 
-function Armor (type)
-{
+function Armor (num) {
 
-	switch(type)
-	{
+	switch(num) {
     case 0:
 	// Armor increase:
 		this.name = "buckler shield";
@@ -127,11 +121,9 @@ function Armor (type)
 	}
 }
 
-function Consumables (type)
-{
+function Consumables (num) {
 
-	switch(type)
-	{
+	switch(num) {
     case 0:
 	//lifepoint increase:    
 		this.name = "Small Potion";

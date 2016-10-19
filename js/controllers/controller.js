@@ -7,69 +7,70 @@
 
 // bring up character selection and images
 
-function characterChoice (name){
+function characterChoice (name, chartype) {
 
-	var text;
+	if (chartype == 'rouge' || 'soldier' || 'tank'){
 
-	$('.overlay').on('click', function(){
-		var id = event.target.id;
+		switch(chartype){
 
-		if (id.length < 8){
+			case 'rouge':
+				alert("You have choosen the rouge,\n be as cunning as a fox!");
+			break;
 
-			switch(id){
+			case 'soldier':
+				alert("You have choosen the soldier,\n stay your distance to stay alive!");
+			break;
 
-				case 'rouge':
-					text = "You have choosen the rouge,\n be as cunning as a fox!";
-				break;
+			case 'tank':
+				alert("You have choosen the tank,\n GET UP IN THERE!");
+			break;
 
-				case 'soldier':
-					text = "You have choosen the soldier,\n stay your distance to stay alive!";
-				break;
+			// case 'april':
+			// 	alert("You have choosen a goddess,\n be gental!");
+			// break;
 
-				case 'tank':
-					text = "You have choosen the tank,\n GET UP IN THERE!";
-				break;
-
-			}
-
-			alert(text);
-			var player = new character(name, id);
-			console.log( "player generated");
-			$( ".overlay" ).toggle();
-
-		} else {
-
-			alert("choose a class of player to continue.");
-			characterChoice (name);
 		}
-		return player;
-	});	
 
-	$(document).keydown(function(key) {
-		if (key == 65){
-			alert("You have choosen a goddess,\n be gental!");
-			charchoice = "april";
-			$( ".overlay" ).toggle();
-			var player = new character(name, charchoice);	
-			return player;		
-		}
-	});
-
-	
+		player = new character(name, chartype);
+		console.log( "player generated");
+		$( ".overlay" ).remove();
+		$(document).off('keydown');
+		storyTime();
+	}
 };
 
+// if faced with a monster
+function fightMonster(){
+	
+	enemy = {};
+}
+
+
+//roll for monster or chest
+function chestorMonster(){
+	var random = (Math.floor(Math.random()*(1 - 0 + 1)) + 0);
+	
+	if ( random == 0){
+		monsterRoll();
+	} else{
+		chestR();
+	}
+}
+//roll for which monster monster
+function mosterRoll(){
+	var random = (Math.floor(Math.random()*(2 - 0 + 1)) + 0);
+	var enemy = Monster(random);
+}
 
 // opens random chest
-function chestR(type)
-{
+function chestR() {
 	var open = confirm("would you like to open this Random chest?");
-	var random = weapons(Math.floor(Math.random()*(2 - 1 + 1)) + 1);
+	var random = (Math.floor(Math.random()*(2 - 1 + 1)) + 1);
 
 	if (open == true) {
-		switch (random)
-		{
+		switch (random) {
 			case 0:
-				chestW(type);
+				chestW();
 			break;
 
 			case 1:
@@ -83,107 +84,46 @@ function chestR(type)
 	} else {
 		// gives players a second chance.
 		open = confirm("Are you sure?");
-		if (open == true)
-		{
+		if (open == true) {
 			alert("oookay");
 			return;
-		} else
-		{
-			chestR(type);
+		} else {
+			chestR();
 		}
 	}
 }
 
 
 // opens weapons chest
-function chestW (type) {
+function chestW () {
 	var open = confirm("would you like to open this weapons chest?");
 	if (open == true) {
 		// weapon(0) = fist
-		switch(type) 
+		switch(player.type) 
 		{
 		    case "rouge":
 			// weapons dual = 1,2
-		 	  	var newWeapon = weapons(Math.floor(Math.random()*(2 - 1 + 1)) + 1);
-		 	  	if (player.weapon.name == "FIST OF FURRY")
-		 	  	{
-		 	  		player.weapon = newWeapon;
-			 		alert("You have just recieved the" + player.weapon.name + "weapon \n which gives you" + player.weapon.damage + "damage");
-			 	} else
-			 	{
-			 		var replacepWeapon = confirm("You already have " + " " + player.weapon.name + "with" + player.weapon.damage + "\n do you wish to replace it with" + newWeapon.name + "with" + newWeapon.damage+ "?");
-			 	  	if (replacepWeapon == true)
-			 	    {
-			 	   		player.weapon = newWeapon;
-			 	   		alert("You have just recieved the" + player.weapon.name + "weapon \n which gives you" + player.weapon.damage+  "damage");
-			 	    } else
-			 	    {
-			 	    	return;
-			 	    }
-			 	}
+		 	  	var newWeapon = new weapons(Math.floor(Math.random()*(2 - 1 + 1)) + 1);
+		 	  	weaponCheck(newWeapon);
 		    break;
 
 		    case "soldier":
 		    // weapons dual = 5,6
-				var newWeapon = weapons(Math.floor(Math.random()*(6 - 5 + 1)) + 5);
-		 	    if (player.weapon.name == "FIST OF FURRY"){
-		 	  		player.weapon = newWeapon;
-			 		alert("You have just recieved the" + player.weapon.name + "weapon \n which gives you" + player.weapon.damage + "damage");
-			 	} else {
-
-			 		var replacepWeapon = confirm("You already have " + " " + player.weapon.name + "with" + player.weapon.damage + "\n do you wish to replace it with" + newWeapon.name + "with" + newWeapon.damage+ "?");
-			 	  	if (replacepWeapon == true)
-			 	    {
-			 	   		player.weapon = newWeapon;
-			 	   		alert("You have just recieved the" + player.weapon.name + "weapon \n which gives you" + player.weapon.damage + "damage");
-			 	    } else
-			 	    {
-			 	    	return;
-			 	    }
-			 	}
+				var newWeapon = new weapons(Math.floor(Math.random()*(6 - 5 + 1)) + 5);
+				weaponCheck(newWeapon);
 		     break;
 
 		    case "tank":
 			// weapons dual = 5,6
-				var newWeapon = weapons(Math.floor(Math.random()*(4 - 3 + 1)) + 3);
-				if (player.weapon.name == "FIST OF FURRY") {
-					
-		 	  		player.weapon = newWeapon;
-			 		alert("You have just recieved the" + player.weapon.name + "weapon \n which gives you" + player.weapon.damage + "damage");
-			 	} else {
-
-			 		var replacepWeapon = confirm("You already have " + " " + player.weapon.name + "with" + player.weapon.damage + "\n do you wish to replace it with" + newWeapon.name + "with" + newWeapon.damage+ "?");
-			 	  	if (replacepWeapon == true)
-			 	    {
-			 	   		player.weapon = newWeapon;
-			 	   		alert("You have just recieved the" + player.weapon.name + "weapon \n which gives you" + player.weapon.damage + "damage");
-			 	    } else
-			 	    {
-			 	    	return;
-			 	    }
-			 	}
+				var newWeapon = new weapons(Math.floor(Math.random()*(4 - 3 + 1)) + 3);
+				weaponCheck(newWeapon);
 		     break;
-
-		    case "april":
-		    // god class, all weapons
-			    var newWeapon = weapons(Math.floor(Math.random()*(6 - 1 + 1)) + 1);
-			    if (player.weapon.name == "FIST OF FURRY")
-		 	  	{
-		 	  		player.weapon = newWeapon;
-			 		alert("You have just recieved the" + player.weapon.name + "weapon \n which gives you" + player.weapon.damage + "damage");
-			 	} else
-			 	{
-			 		var replacepWeapon = confirm("You already have " + " " + player.weapon.name + "with" + player.weapon.damage + "\n do you wish to replace it with" + newWeapon.name + "with" + newWeapon.damage+ "?");
-			 	  	if (replacepWeapon == true)
-			 	    {
-			 	   		player.weapon = newWeapon;
-			 	   		alert("You have just recieved the" + player.weapon.name + "weapon \n which gives you" + player.weapon.damage + "damage");
-			 	    } else
-			 	    {
-			 	    	return;
-			 	    }
-			 	}
-		     break;
+		     // unable to activate this character
+		   //  case "april":
+		   // god class, all weapons
+			  //   var newWeapon = new weapons(Math.floor(Math.random()*(6 - 1 + 1)) + 1);
+			  // weaponCheck(newWeapon);
+		   //   break;
 		}		
 		return;
 	} else
@@ -201,6 +141,21 @@ function chestW (type) {
 	}
 }
 
+//checks current weapon and replaces with new
+function weaponCheck (newWeapon) {
+if (player.weapon.name == "FIST OF FURRY") {
+	player.weapon = newWeapon;
+	alert("You have just recieved the" + player.weapon.name + "weapon \n which gives you" + player.weapon.damage + "damage");
+} else {
+	var replacepWeapon = confirm("You already have " + " " + player.weapon.name + "with" + player.weapon.damage + "\n do you wish to replace it with" + newWeapon.name + "with" + newWeapon.damage+ "?");
+	if (replacepWeapon == true) {
+		player.weapon = newWeapon;
+		alert("You have just recieved the" + player.weapon.name + "weapon \n which gives you" + player.weapon.damage+  "damage");
+	} else {
+		return;
+	}
+} 
+};
 
 // opens item chest
 function chestI () {
@@ -220,7 +175,7 @@ function chestI () {
 		{
 			case 0:
 				alert("The Chest had an Amulet in it!");
-				var newAmulet = Amulet(Math.floor(Math.random()*(3 - 0 + 1)) + 0);
+				var newAmulet = new Amulet(Math.floor(Math.random()*(3 - 0 + 1)) + 0);
 				if (player.amulet == null)
 				{
 					player.amulet = newAmulet;
@@ -242,7 +197,7 @@ function chestI () {
 
 			case 1:
 				alert("The Chest had Armor in it!");
-				var newbodyarmor = Armor(Math.floor(Math.random()*(2 - 1 + 1)) + 1);
+				var newbodyarmor = new Armor(Math.floor(Math.random()*(2 - 1 + 1)) + 1);
 				if (player.bodyArmor == null)
 				{
 					player.bodyArmor = newbodyarmor;
@@ -266,11 +221,11 @@ function chestI () {
 				alert("The Chest had an shield in it!");
 				if (player.shield == null )
 				{
-					player.shield = Armor(0);
+					player.shield = new Armor(0);
 					alert("You have just recieved the" + player.shield.name + "shield \n which gives you" + player.shield.duration + "hp duration");
 				} else
 				{
-					alert("Sorry, you already had a shield \n better luck next time");
+					alert("Sorry, you already had a shield \n better luck next time!");
 					return;
 				}
 			break;
@@ -299,7 +254,7 @@ function chestC () {
 	if (open == true)
 	{
 		// random roll for consumable item
-		var newPotion = Consumables(Math.floor(Math.random()*(2 - 0 + 1)) + 0);
+		var newPotion = new Consumables(Math.floor(Math.random()*(2 - 0 + 1)) + 0);
 		if (player.consumable != null)
 		{
 			// keep the potion you have?
