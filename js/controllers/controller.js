@@ -32,6 +32,22 @@ function characterChoice (name, chartype) {
 		console.log( "player generated");
 		$( ".overlay" ).remove();
 		$(document).off('keydown');
+
+		// $(document).keydown(function(key) {
+		// 	if (key == c) {
+		// 		alert("Your health is" + " " + player.health);
+		// 		var use = confirm("would you like to use a consumable");
+		// 		if (use == true){
+		// 			useConsume();
+		// 			player.consumable = {};
+		// 		} else {
+		// 			return;
+		// 		}
+
+		// 	}
+		// });
+
+
 		storyTime();
 	}
 };
@@ -61,7 +77,7 @@ function fightorflight(){
 function chestorMonster(){
 	var random = randomRoll(10,0);
 	
-	if ( random >= 3){
+	if ( random >= 2){
 		monsterRoll();
 	} else{
 		chestR();
@@ -70,28 +86,23 @@ function chestorMonster(){
 //roll for which monster monster
 function monsterRoll(){
 	var random = randomRoll(2,0);
-	var enemy = new Monster(random);
+	enemy = new Monster(random);
 }
 
 // opens random chest
 function chestR() {
 	var open = confirm("would you like to open this Random chest?");
-	var random = randomRoll(2,0);
+	var random = randomRoll(10,0);
 
 	if (open == true) {
-		switch (random) {
-			case 0:
-				chestW();
-			break;
-
-			case 1:
-				chestI();
-			break;
-
-			case 2:
-				chestC();
-			break;
+		if (random >=9) {					 // 20% chance
+			chestW();
+		} else if (random < 9 && random >=5){//50% chance
+			chestI();
+		} else {							 //30% chance
+			chestC();
 		}
+
 	} else {
 		// gives players a second chance.
 		open = confirm("Are you sure?");
@@ -174,34 +185,26 @@ function weaponCheck (newWeapon) {
 function chestI () {
 	var open = confirm("would you like to open this Item chest?");
 	
-	if (open == true)
-	{
-		if (player.type == 'rouge')
-		{
+	if (open == true) {
+		if (player.type == 'rouge') {
 			type = randomRoll(2,0);
-		} else
-		{
+		} else {
 			type = randomRoll(1,0);
 		}
 		
-		switch (type)
-		{
+		switch (type) {
 			case 0:
 				alert("The Chest had an Amulet in it!");
 				var newAmulet = new Amulet(randomRoll(3,0));
-				if (player.amulet == null)
-				{
+				if (Object.getOwnPropertyNames(player.amulet).length != 0) {
 					player.amulet = newAmulet;
 					alert("You have just recieved the" + player.amulet.name + "amulet \nwhich gives you" +player.amulet.bonus*100 + "% bonus");
-				} else
-				{
+				} else {
 					var replaceAmulet = confirm("You already have a" + " " + player.amulet.name + "\n do you wish to replace it with" + newAmulet.name + "with" + newAmulet.bonus*100 + "% bonus");
-					if ( replaceAmulet == true)
-					{
+					if ( replaceAmulet == true) {
 						player.amulet = newAmulet;
 						alert("You have just recieved the" + player.amulet.name + "amulet \nwhich gives you" + player.amulet.bonus*100 + "% bonus");
-					} else
-					{
+					} else {
 						return;
 					}
 				} 
@@ -211,19 +214,15 @@ function chestI () {
 			case 1:
 				alert("The Chest had Armor in it!");
 				var newbodyarmor = new Armor(randomRoll(2,1));
-				if (player.bodyArmor == null)
-				{
+				if (Object.getOwnPropertyNames(player.bodyArmor).length != 0) {
 					player.bodyArmor = newbodyarmor;
 					alert("You have just recieved the" + player.bodyArmor.name + "Armor \n which gives you" + player.bodyArmor.bonus + "bonus");
-				} else
-				{	
+				} else {	
 					var replaceArmor = confirm("You already have a" + " " + player.bodyArmor.name + "\n do you wish to replace it with" + newbodyarmor.name + "with" + newbodyarmor.bonus+ "?");
-					if ( replaceArmor == true)
-					{
+					if ( replaceArmor == true) {
 						player.bodyArmor = newbodyarmor;
 						alert("You have just recieved the" + player.bodyArmor.name + "Armor \n which gives you" + player.bodyArmor.bonus + "bonus");
-					} else
-					{
+					} else {
 						return;
 					}
 				} 
@@ -232,28 +231,24 @@ function chestI () {
 
 			case 2:
 				alert("The Chest had an shield in it!");
-				if (player.shield == null )
-				{
+				if (Object.getOwnPropertyNames(player.shield).length != 0) {
 					player.shield = new Armor(0);
 					alert("You have just recieved the" + player.shield.name + "shield \n which gives you" + player.shield.duration + "hp duration");
-				} else
-				{
+				} else {
 					alert("Sorry, you already had a shield \n better luck next time!");
 					return;
 				}
 			break;
 		}
 
-	} else
-	{
+	} else {
+
 		// gives players a second chance.
 		open = confirm("Are you sure?");
-		if (open == true)
-		{
+		if (open == true) {
 			alert("oookay");
 			return;
-		} else
-		{
+		} else {
 			chestI();
 		}
 	}
@@ -263,58 +258,48 @@ function chestI () {
 function chestC () {
 	// confirm opening the chest
 	var open = confirm("would you like to open this consumables chest?");
-	if (open == true)
-	{
+	if (open == true) {
 		// random roll for consumable item
 		var newPotion = new Consumables(randomRoll(2,0));
-		if (player.consumable != null)
-		{
+		if (Object.getOwnPropertyNames(player.consumable).length != 0) {
 			// keep the potion you have?
 			var keepPotion = confirm("You already have a" + " " + player.consumable.name + " with " + player.consumable.life + "hp" + "\n do you wish to replace it with" + newPotion + "with" + newPotion.life + "?");
-			if ( keepPotion == true)
-			{
+			if ( keepPotion == true) {
 				// replaces consumable with new potion
 				player.consumable = newPotion;
-			} else
-			{
+			} else {
 				return;
 			}
-		} else
-		{
+		} else {
 			player.consumable = newPotion;
 			alert("congradulations you just recieved a " +" " + player.consumable.name + "\nWhich can give you" + " " + player.consumable.life + "health");
 		}
-	} else
-	{
+	} else {
 		// gives players a second chance.
 		open = confirm("Are you sure?");
-		if (open == true){
+		if (open == true) {
 			alert("oookay");
 			return;
-		} else{
+		} else {
 			chestC();
 		}
 	}
 }
 
-
 // uses potion
 function useConsume() {
 
-	if (player.consumable != null)
-	{
+	if (player.consumable != null) {
 		player.health = player.health + player.consumable.life;
 		player.consumable = null;
-		if (player.health > player.hpmax)
-		{
+
+		if (player.health > player.hpmax) {
 			player.health = player.hpmax;
-		} else
-		{
+		} else {
 			return;
 		}
 
-	} else
-	{
+	} else {
 		alert("You do not have anything to consume");
 	}
 }
@@ -338,7 +323,7 @@ function fightMonster(){
 	while(enemy.health > 0 && player.health > 0){
 		attackorder = 0;
 
-		if (attackorder = 0){
+		if (attackorder == 0){
 			if (player.ranged == true){
 				var method = prompt("You have ranged abilities do you want to use them or melee: 'ranged' or 'melee'").toLowerCase();
 			} else {
@@ -346,7 +331,7 @@ function fightMonster(){
 			}
 
 
-			CRhit = criticalHit(player, enemy); //rolls for critical hit. if damage, comes back true
+			CRhit = CRhitRoll(player, enemy); //rolls for critical hit. if damage, comes back true
 
 			if(CRhit == false) {
 				// player attacking enemy
@@ -366,7 +351,7 @@ function fightMonster(){
 		} else {
 
 			// enemy attacks on odd turns, enemy has much lower chance for CR and player has higher evade
-			CRhit = criticalHit(enemy, player); //rolls for critical hit and does damage, no further damage needed
+			CRhit = CRhitRoll(enemy, player); //rolls for critical hit and does damage, no further damage needed
 
 
 			if(CRhit == false) {
@@ -388,16 +373,15 @@ function fightMonster(){
 		}
 	}
 
-
+	// Enemy dead
 	if(enemy.health <= 0) {
 		alert("You've defeated the" + " " + enemy.name +"! Onwards!");
 		enemy = {};
 		return;
-
+	// You dead
 	} else if (player.health <= 0) {
-		// then you have died
 		dead();
-		return;
+		return;//secret way for zombies to get back in the fight, we're all soldiers now.
 	}
 }
 
@@ -429,7 +413,7 @@ function attack(atkobj, defobj) {
 }
 
 // checks to see if you get a chritical hit, and does damage
-function criticalHit(atkobj, defobj) {
+function CRhitRoll(atkobj, defobj) {
 	var criticalChance = randomRoll(10,1);
 	var CRbonus = 2;
 
@@ -457,8 +441,8 @@ function criticalHit(atkobj, defobj) {
 // If you die
 function dead(){
 
-	alert("It seems as though you have fallen great warrior");
-	alert("Try again? maybe this time you sit tight or explore more?");
+	textDialogue(narrator, "It seems as though you have fallen great warrior");
+	textDialogue(narrator, "Try again? maybe this time you sit tight or explore more?");
 
 	var action = prompt("Would you like to play again, yes, no").toLowerCase();
 
@@ -469,7 +453,7 @@ function dead(){
 
 		case 'no':
 			alert("Hope you enjoyed your time anyway.");
-			$('.gameover').toggle();
+			// $('.gameover').toggle();
 			//end game, idk how
 		break;
 

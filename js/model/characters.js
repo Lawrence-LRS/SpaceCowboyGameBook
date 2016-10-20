@@ -66,7 +66,7 @@
 function character(name, type){
 	this.name = name;
 	this.type = type;
-	this.voice = 'blue';
+	this.voice = 'white';
 
 	this.weapon = new weapons(0);
 	this.consumable = {};
@@ -136,10 +136,10 @@ function character(name, type){
 function Companion() {
 	this.name =  "John";
 	this.voice = 'green';
-	this.health= 200;
+	this.health = 200;
 	this.evasion = .2;
 	this.criticalHit = 2;
-	this.weapons(6);
+	this.weapon = new weapons(6);
 }
 
 //so I can call monster and either roll for difficulty or just call them out
