@@ -72,28 +72,32 @@ function Amulet (num) {
     // amulet that increases characters critical hit mod
 	// Critical Hit : +25%   
 		this.name = "typeCritical";
-		this.bonus = .25;
+		this.type = 'critical';
+		this.bonus = 1.25;
         break;
 
     case 1:
     // amulet that increases characters base damage
 	// Damage: + +25%	
 		this.name = "typeDamage";
-		this.bonus = .25;
+		this.type = 'damage';
+		this.bonus = 1.25;
         break;
 
     case 2:
     // amulet that increase characters life hit points
 	// Life: +25%	
 		this.name = "typelife";
-		this.bonus = .25;
+		this.type = 'health';
+		this.bonus = 1.25;
         break;
 
     case 3:
     // amulet that increase evasion
 	// Evasion +25% 
 		this.name = "typeEvasion";
-		this.bonus = .25;
+		this.type = 'evasion';
+		this.bonus = 1.25;
 	 break;
 	}
 }
