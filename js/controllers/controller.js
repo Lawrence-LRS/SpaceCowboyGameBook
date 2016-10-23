@@ -34,7 +34,7 @@ function characterChoice (name, chartype) {
 		$(document).off('keydown');
 
 		// $(document).keydown(function(key) {
-		// 	if (key == c) {
+		// 	if (key == 67) {
 		// 		alert("Your health is" + " " + player.health);
 		// 		var use = confirm("would you like to use a consumable");
 		// 		if (use == true){
@@ -51,6 +51,44 @@ function characterChoice (name, chartype) {
 		storyTime();
 	}
 };
+
+// explorefunction
+function exploreship(explorecounter){
+	switch(explorecounter) {
+
+		case 0:
+			gameobj.explore++;
+			textDialogue(narrator, "Narocube: Hey," + " " + player.name + " you found a Weapons Chest!");
+			chestW();
+		break;
+
+		case 1:
+			gameobj.explore++;
+			textDialogue(narrator, "Narocube: Hey," + " " + player.name + " you found a Items Chest!");
+			chestI();
+		break;
+
+		case 2:
+			gameobj.explore++;
+			textDialogue(narrator, "Narocube: Hey," + " " + player.name + " you found a Consumables Chest!");
+			chestC();
+		break;
+
+		case 3:
+			gameobj.explore++;
+			textDialogue(narrator, "Narocube: Hey," + " " + player.name + " you found a Random Chest!");
+			chestR();
+		break;
+
+		case 4:
+			// gameobj.explore++;
+		break;
+
+		case 5:
+			// gameobj.explore++;
+		break;
+	}
+}
 //decide whether to run or fight monsters
 function fightorflight(){
 	var action = prompt("You have ran across the deadly" + " " + enemy.name + " Do you want to 'fight' or 'run'?").toLowerCase();
@@ -195,8 +233,8 @@ function chestI () {
 		switch (type) {
 			case 0:
 				alert("The Chest had an Amulet in it!");
-				var newAmulet = new Amulet(randomRoll(3,0));
-				if (Object.getOwnPropertyNames(player.amulet).length != 0) {
+				items.amulet = new Amulet(randomRoll(3,0));
+				if (Object.getOwnPropertyNames(player.amulet).length = 0) {
 					player.amulet = newAmulet;
 					alert("You have just recieved the" + player.amulet.name + "amulet \nwhich gives you" +player.amulet.bonus*100 + "% bonus");
 				} else {
@@ -213,15 +251,15 @@ function chestI () {
 
 			case 1:
 				alert("The Chest had Armor in it!");
-				var newbodyarmor = new Armor(randomRoll(2,1));
-				if (Object.getOwnPropertyNames(player.bodyArmor).length != 0) {
-					player.bodyArmor = newbodyarmor;
-					alert("You have just recieved the" + player.bodyArmor.name + "Armor \n which gives you" + player.bodyArmor.bonus + "bonus");
+				items.bodyArmor = new Armor(randomRoll(2,1));
+				if (player.bodyArmor.length = 0) {
+					player.bodyArmor = items.bodyArmor;
+					alert("You have just recieved the" + player.bodyArmor.name + "Armor \n which gives you" + player.bodyArmor.duration + "duration");
 				} else {	
-					var replaceArmor = confirm("You already have a" + " " + player.bodyArmor.name + "\n do you wish to replace it with" + newbodyarmor.name + "with" + newbodyarmor.bonus+ "?");
+					var replaceArmor = confirm("You already have the " + player.bodyArmor.name + "\nDo you wish to replace it with " + newbodyarmor.name + " with " + newbodyarmor.duration+ " duration ?");
 					if ( replaceArmor == true) {
 						player.bodyArmor = newbodyarmor;
-						alert("You have just recieved the" + player.bodyArmor.name + "Armor \n which gives you" + player.bodyArmor.bonus + "bonus");
+						alert("You have just recieved the" + player.bodyArmor.name + " \nwhich gives you " + player.bodyArmor.duration + " duration");
 					} else {
 						return;
 					}
@@ -231,7 +269,7 @@ function chestI () {
 
 			case 2:
 				alert("The Chest had an shield in it!");
-				if (Object.getOwnPropertyNames(player.shield).length != 0) {
+				if (Object.getOwnPropertyNames(player.shield).length = 0) {
 					player.shield = new Armor(0);
 					alert("You have just recieved the" + player.shield.name + "shield \n which gives you" + player.shield.duration + "hp duration");
 				} else {
@@ -272,7 +310,7 @@ function chestC () {
 			}
 		} else {
 			player.consumable = newPotion;
-			alert("congradulations you just recieved a " +" " + player.consumable.name + "\nWhich can give you" + " " + player.consumable.life + "health");
+			alert("Congradulations you just recieved a " + player.consumable.name + "\nWhich can heal you " + player.consumable.life + " health");
 		}
 	} else {
 		// gives players a second chance.
