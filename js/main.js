@@ -37,7 +37,8 @@ var bodyArmor ={};
 var shield = {};
 var consumable = {};
 
-var player = {};
+//character initiation
+var player = {voice: 'white'};
 var enemy = {};
 var john = {};
 var narrator = {voice: 'blue'};
@@ -51,20 +52,18 @@ var main = function() {
 
 		// Function that passes the input to both display and interact
 		$('form').submit(function() {
-			
 		    var pass = $('#action').val();
-
 		    if ( pass !== ""){
 		    	gameobj.txtsubmit = true;
 		    	var low = pass.toLowerCase();
 		    	gameobj.submitval = low;
-		    	$('#action').val("")
+		    	txtsubmit = true;
 		    }
 
 		    return false;
-		  });
+		});
 
-		initiateGame();
+		mainLoop();
 	});
 
 	return false;
@@ -97,18 +96,7 @@ function textDialogue(who, str) {
 
 // Alert player to be ready to play game
 function initiateGame() {
-	alert("Welcome to Lawrence Goedrich's Choose your own adventure game!!");
-
-	// call player for name
-	var yourName = prompt("Warrior, what shall I call you?");
-
-	$( ".overlay" ).toggle();
-
-	$('.overlay').on('click', function(){
-		var id = event.target.id;
-		//choose player type and create player object 
-		characterChoice (yourName, id);
-	});
+	
 
 
 
@@ -125,22 +113,77 @@ function initiateGame() {
 
 
 
-function storyTime() {
+function mainLoop() {
+	var winning = false;
+	while (winning = false){
 
-	intro();
+		switch (storypoint){
+			case 0: // introduction to game and asigning player id
+				textDialogue(narrator, "Welcome to Lawrence Goedrich's Choose your own adventure game!!");
 
-	continue1(); //initiate game control
+				// call player for name
+				textDialogue(narrator, "Warrior, what shall I call you?");
 
-	cageSound();
+				var yourName = gameobj.submitval;
+
+				$( ".overlay" ).toggle();
+
+				$('.overlay').on('click', function(){
+					var id = event.target.id;
+					//choose player type and create player object 
+					characterChoice (yourName, id);
+				});
 
 
-	doorSound();
 
 
-	growlSound();
+			break;
 
+			case 1:
+				var exit = false;
+				while (exit = false){
+					exit = intro();
+				}
+				storypoint++;
+			break;
 
-	upstairSounds();
+			case 2:
+				var exit = false;
+
+					textDialogue(narrator, "Narocube: Now that John is gone do you want to: explore, or sit tight");
+
+				while (exit = false){
+					exit = continue1(); //initiate game control
+				}
+
+				storypoint++;
+			break;
+				
+
+			case 3:
+				// cageSound();
+			break;	
+
+			case 4:
+				// doorSound();
+			break;
+
+			case 5:
+				// growlSound();
+			break;
+
+			case 6:
+				// upstairSounds();
+			break;
+
+			case 10:
+
+			winning = true;
+			break;
+		}
+		
+	}
+
 }
 
 
@@ -153,19 +196,20 @@ function intro() {
 	textDialogue(john, "John: This helper bot should help you around the ship.");
 	textDialogue(narrator, "Narocube: Hello " + player.name + " I am Narocube, the helper bot John mentioned");
 	// textDialogue(john, "John: Oh before I forget, the c command will allow you to use a potion to heal if you have it, not like you would need one anyway.");
+	return true;
 }
 
 
 // initiate game sequence
 function continue1() {
-	var action = false;;
+	var action = false;
 
-	textDialogue(narrator, "Narocube: Now that John is gone do you want to: explore, or sit tight");
+		
 
-	if (gameobj.txtsubmit == true ) {
 		action = gameobj.submitval;
 		textDialogue(player, player.name +": I think that I will" + " " + action);
 
+	if (gameobj.txtsubmit == true ) {
 		switch (action) {
 			case 'explore':
 				exploreship(gameobj.explore);
@@ -183,14 +227,14 @@ function continue1() {
 		}
 		gameobj.txtsubmit = false;
 		action = true;
-	} 
+	}
 
-	// if ( gameobj.txtsubmit == false && action == true){
-	// 	action =false;
-	// 	return;
-	// } else {
-	// 	setTimeout(continue1, 2000);
-	// }
+	if ( gameobj.txtsubmit == false && action == true){
+		action = false;
+		return;
+	} else {
+		setTimeout(continue1, 2000);
+	}
 }
 
 

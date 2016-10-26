@@ -48,18 +48,18 @@ function characterChoice (name, chartype) {
 		// });
 
 
-		storyTime();
+		mainLoop();
 	}
 };
 
 // explorefunction
-function exploreship(explorecounter){
-	switch(explorecounter) {
+function exploreship(){
+	switch(gameobj.explore) {
 
 		case 0:
 			gameobj.explore++;
 			textDialogue(narrator, "Narocube: Hey," + " " + player.name + " you found a Weapons Chest!");
-			chestW();
+			setTimeout(chestW, 1000);
 		break;
 
 		case 1:
