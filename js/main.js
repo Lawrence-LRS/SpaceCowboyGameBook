@@ -26,80 +26,41 @@ Wins and Losses
 
 // public variable section
 
-var gameobj = {sittight:0, explore:0, upstiars:false, txtsubmit: false, submitval:''};
+var gameobj = {sittight:0, explore:0, upstiars:false, txtsubmit: false, submitval:'', storyPoint:0,};
 	// counter for ignored warnings on deck (if fully ignored game will end in victory)
 	// number of opened chests to determine explore order
 	// upstairs check
 
-//items
+	//item preload for game use
 var amulet = {};
 var bodyArmor ={};
 var shield = {};
 var consumable = {};
 
-//character initiation
+	//character initiation
+// active player
 var player = {voice: 'white'};
+// Empty monster object, when defeated it empties and allows next monster to populate
 var enemy = {};
+// John character to help you fight boss
 var john = {};
+// Narocube narrator to tell you whats happening
 var narrator = {voice: 'blue'};
 
 // set up new background design and initaite game play with story in dialoge box
 var main = function() {
 	// dialoge: 
-	$("#start").click(function(){
-		$('.startOverlay').remove();
-		$('.Jumbo-title').remove();
+	$("#start").click(function(){    // initial event to start game
+		$('.startOverlay').remove(); // removes start button
+		$('.Jumbo-title').remove();	 // removes white text title
 
-		// Function that passes the input to both display and interact
-		$('form').submit(function() {
-		    var pass = $('#action').val();
-		    if ( pass !== ""){
-		    	gameobj.txtsubmit = true;
-		    	var low = pass.toLowerCase();
-		    	gameobj.submitval = low;
-		    	txtsubmit = true;
-		    }
-
-		    return false;
-		});
-
-		mainLoop();
+		mainLoop(); // initate game loop
 	});
 
 	return false;
 };
 
-
-
-
-
-
-$(document).ready(main);
-
-
-
-
-
-
-// Function that displays a string which is passed to it
-function textDialogue(who, str) {
-		var action = $('<p>').text(str);
-		action.css('color', who.voice);
-		$(action).hide().prependTo('.dialogue').fadeIn('slow');
-		$('#action').val("");
-}
-
-
-
-
-
-
-// Alert player to be ready to play game
-function initiateGame() {
-	
-
-
-
+$(document).ready(main); // when document is loaded, start the game sequence
 
 	// to call april super class, need a better method than keydown
 	// $(document).keydown(function(key) {
@@ -108,204 +69,194 @@ function initiateGame() {
 	// 		characterChoice (yourName, id);
 	// 	}
 	// });
-}
 
-
-
-
+// main game loop
 function mainLoop() {
-	var winning = false;
-	while (winning = false){
+	console.log("entered mainloop"); //loop notification
+	console.log(gameobj.storyPoint); // level notification
+	switch (gameobj.storyPoint) {
+		case 0: // introduction to game and asigning player id
+			textDialogue(narrator, "Welcome to Lawrence Goedrich's Choose your own adventure game!!");
 
-		switch (storypoint){
-			case 0: // introduction to game and asigning player id
-				textDialogue(narrator, "Welcome to Lawrence Goedrich's Choose your own adventure game!!");
+			// call player for name
+			textDialogue(narrator, "Warrior, what shall I call you?");
 
-				// call player for name
-				textDialogue(narrator, "Warrior, what shall I call you?");
-
-				var yourName = gameobj.submitval;
-
-				$( ".overlay" ).toggle();
-
-				$('.overlay').on('click', function(){
-					var id = event.target.id;
-					//choose player type and create player object 
-					characterChoice (yourName, id);
+			(function(){
+				$('form').submit(function() {
+				    var pass = $('#action').val().toLowerCase();
+				    if ( pass !== ""){
+				    	//doesn't matter for name, just not empty
+				    	player.name = pass;
+				    	textDialogue(player, player.name +": My name is " + pass);
+						console.log("player has name");
+				    	gameobj.storyPoint++;
+				    	$('form').unbind();
+				    	mainLoop();					    	
+				    } else {
+				    	textDialogue(narrator, "please choose a real name and not ' '");
+				    }
+					return false;
 				});
+			})();
+		break;
 
+		case 1:
+			$( ".overlay" ).toggle();
 
+			textDialogue(narrator, "Please choose a hero class");
 
-
-			break;
-
-			case 1:
-				var exit = false;
-				while (exit = false){
-					exit = intro();
+			$('.overlay').on('click', function(){
+				var chartype = event.target.id;
+				if (chartype === 'rouge' ||chartype === 'soldier' ||chartype === 'tank') {
+					//choose player type and create player object 
+					console.log(chartype);
+					characterChoice (player.name, chartype);
+					gameobj.storyPoint++;
+					mainLoop();
+				} else {
+					textDialogue(narrator, "Try clicking on one of the images.");
 				}
-				storypoint++;
-			break;
+			}); // choosing player type (rouge, soldier, tank)
+		break;
 
-			case 2:
-				var exit = false;
+		case 2: //intro function, John lets you know the set and setting.
+			john = new Companion();
 
-					textDialogue(narrator, "Narocube: Now that John is gone do you want to: explore, or sit tight");
+			// would like to find 
+			textDialogue(john, "John: Hey" + " " + player.name + " the ship should land in 15 minutes. I have to go up stairs to check on the landing sequence, exploring the ship might bring you some rewards");
+			textDialogue(john, "John: This helper bot should help you around the ship.");
+			textDialogue(narrator, "Narocube: Hello " + player.name + " I am Narocube, the helper bot John mentioned");
+			// textDialogue(john, "John: Oh before I forget, the c command will allow you to use a potion to heal if you have it, not like you would need one anyway.");
 
-				while (exit = false){
-					exit = continue1(); //initiate game control
-				}
+			gameobj.storyPoint++;
+			mainLoop();
+		break;
 
-				storypoint++;
-			break;
-				
+		case 3:
+			textDialogue(narrator, "Narocube: Now that John is gone do you want to: explore, or sit tight");
+			formSubmit(continue1);
+		break;
+			
 
-			case 3:
-				// cageSound();
-			break;	
+		case 4:
+			// insert screeaching sound alert("screeeeeeeach");
+			textDialogue(narrator, "Narocube: Hey, whats that sound! \n Do you want to:'go look' 'explore' the ship, or 'sit tight'");
+			formSubmit(cageSound);
+		break;
 
-			case 4:
-				// doorSound();
-			break;
+		case 5:
+			// insert space door sound alert("sound space doors make"); 
+			textDialogue(narrator, "Narocube: Oh what now! \n Do you want to:'go look' 'explore' the ship, or 'sit tight'");
+			formSubmit(doorSound);
+		break;
 
-			case 5:
-				// growlSound();
-			break;
+		case 6:
+			// insert growling sounds from down the hallway
+			textDialogue(narrator, "Narocube: Oh what now! \n Do you want to:'go look' 'explore' the ship, or 'sit tight'");
+			formSubmit(growlSound);
+		break;
 
-			case 6:
-				// upstairSounds();
-			break;
+		case 7:
+			// alert("Stomping noises from upstairs");
+			textDialogue(narrator, "Narocube: Hey listen there must be other people on the ship! \n Do you want to:'go look' 'explore' the ship, or 'sit tight'");
+			formSubmit(upstairSounds);
+		break;
 
-			case 10:
-
-			winning = true;
-			break;
-		}
+		// case 7:
 		
+		// 	formSubmit(upstairSounds);
+		// break;
+
+		case 10:
+			textDialogue(narrator, "Narocube: vehicle begins to shake uncontrolably \n we must be starting the landing sequence");
+			formSubmit(vehicleShaking);
+		break;
+
+		// case 10:
+
+		// winning = true;
+		// break;
 	}
-
-}
-
-
-  
-// have john leave and give control to player
-function intro() {
-	john = new Companion();
-
-	textDialogue(john, "John: Hey" + " " + player.name + " the ship should land in 15 minutes. I have to go up stairs to check on the landing sequence, exploring the ship might bring you some rewards");
-	textDialogue(john, "John: This helper bot should help you around the ship.");
-	textDialogue(narrator, "Narocube: Hello " + player.name + " I am Narocube, the helper bot John mentioned");
-	// textDialogue(john, "John: Oh before I forget, the c command will allow you to use a potion to heal if you have it, not like you would need one anyway.");
-	return true;
 }
 
 
 // initiate game sequence
-function continue1() {
-	var action = false;
-
-		
-
-		action = gameobj.submitval;
-		textDialogue(player, player.name +": I think that I will" + " " + action);
-
-	if (gameobj.txtsubmit == true ) {
+function continue1(action) {
+	
 		switch (action) {
+			case 'go look':
+				textDialogue(narrator, "Narocube: What are you going to look at??")
+			break;
+
 			case 'explore':
 				exploreship(gameobj.explore);
+				gameobj.explore++;
 			break;
 
 			case 'sit tight':
 				textDialogue(narrator, "Narocube: Good choice we should probably wait for John to get back.");
 				gameobj.sittight++;
-			break;
-
-			default:
-				gameobj.txtsubmit = false;
-				textDialogue(narrator, "Narocube: Try again, maybe 'explore', or 'sit tight'");
-				continue1();
+			break;	
 		}
-		gameobj.txtsubmit = false;
-		action = true;
-	}
-
-	if ( gameobj.txtsubmit == false && action == true){
-		action = false;
-		return;
-	} else {
-		setTimeout(continue1, 2000);
-	}
 }
 
-
 // the cage sounds like its being broken
-function cageSound() {
-	alert("screeeeeeeach");
-	var action = prompt("Hey, whats that sound! \n Do you want to:'go look' 'explore' the ship, or 'sit tight'").toLowerCase();
+function cageSound(action) {
 
 	switch (action) {
 		case 'go look':
-			alert("oh wow this cage has been pulled apart, what could have caused this!");
+			textDialogue(narrator, "Narocube: oh wow this cage has been pulled apart, what could have caused this!");
 		break;
 
 		case 'explore':
-			alert("Good choice, it's probably just cargo shifting");
-
+			textDialogue(narrator, "Narocube: Good choice, it's probably just cargo shifting");
 			exploreship(gameobj.explore);
+			gameobj.explore++;
 		break;
 
 		case 'sit tight':
-			alert("Good choice, it's probably just cargo shifting, we should probably wait for John to get back... what does this ship haul anyway?");
+			textDialogue(narrator, "Narocube: Good choice, it's probably just cargo shifting, we should probably wait for John to get back... what does this ship haul anyway?");
 			gameobj.sittight++;
 		break;
-
-		default:
-			alert("Try again, maybe; 'go look', 'explore', or 'sit tight'");
-			cageSound();
 	}
 }
 
 
 // door by the cage opens and doesn't close all the way
-function doorSound() {
-	alert("sound space doors make");
-	var action = prompt("Oh what now! \n Do you want to:'go look' 'explore' the ship, or 'sit tight'").toLowerCase();
+function doorSound(action) {
 
 	switch (action) {
 		case 'go look':
-			action = confirm("The door looks like its been broken, and wont close all the way, seems risky \n Do you want to go through?");
+			textDialogue(narrator, "Narocube: The door looks like its been broken, and wont close all the way, seems risky \n Do you want to go through?");
+			action = confirm("");
 			if (action) {
 				chestorMonster();
 				if (Object.getOwnPropertyNames(enemy).length != 0) { // || empty object?
 					//fight or flight monster
 					fightorflight();
 				} else {
-					alert("Seems as though the door is just broken, huh.");
+					textDialogue(narrator, "Narocube: Seems as though the door is just broken... huh.");
 				}
 			} else {
-				alert("Probably better to play it safe.");
+				textDialogue(narrator, "Narocube: Probably better to play it safe.");
 			}
 		break;
 
 		case 'explore':
-			alert("Good choice, it's probably just John or another crew member");
-
+			textDialogue(narrator, "Narocube: Good choice, it's probably just John or another crew member");
 			exploreship(gameobj.explore);
+			gameobj.explore++;
 		break;
 
 		case 'sit tight':
-			alert("Good choice, it's probably just John or another crew member, we should probably wait for John to get back... Is there anyone else on the ship?");
+			textDialogue(narrator, "Narocube: Good choice, it's probably just John or another crew member, we should probably wait for John to get back... Is there anyone else on the ship?");
 			gameobj.sittight++;
 		break;
-
-		default:
-			alert("Try again, maybe; 'go look', 'explore', or 'sit tight'");
-			doorSound();
 	}
 }
 
 // growling from down the hallway behind that door
-function growlSound() {
+function growlSound(action) {
 
 	var action = prompt("There is a growling sound from down the hallway \n Do you want to:'go look' 'explore' the ship, or 'sit tight'").toLowerCase();
 
@@ -319,83 +270,73 @@ function growlSound() {
 					//fight or flight monster
 					fightorflight();
 				} else {
-					alert('Must have been farther down the hallway')
+					textDialogue(narrator, "Narocube: Must have been farther down the hallway");
 				}
 			} else {
-				alert("Probably better to play it safe.");
+				textDialogue(narrator, "Narocube: Probably better to play it safe.");
 			}
 		break;
 
 
 		case 'explore':
-			alert("Good choice, it's probably just a crew members dog");
-
+			textDialogue(narrator, "Narocube: Good choice, it's probably just a crew members dog");
 			exploreship(gameobj.explore);
+			gameobj.explore++;
 		break;
 
 		case 'sit tight':
-			alert("Good choice, it's probably just a crew members dog, we should probably wait for John to get back... wheres the dog food?");
+			textDialogue(narrator, "Narocube: Good choice, it's probably just a crew members dog, we should probably wait for John to get back... wheres the dog food?");
 			gameobj.sittight++;
 			
 		break;
-
-		default:
-			alert("Try again, maybe; 'go look', 'explore', or 'sit tight'");
-			growlSound();
 	}
 }
 
 
 //foot steps from upstairs
-function upstairSounds() {
-
-	alert("Stomping noises from upstairs");
-	var action = prompt("Hey listen there must be other people on the ship! \n Do you want to:'go look' 'explore' the ship, or 'sit tight'").toLowerCase();
+function upstairSounds(action) {
 
 	switch (action) {
 		case 'go look':
-			alert("Hey," + " " + player.name + " you found stairs!");
+			textDialogue(narrator, "Narocube: Hey," + " " + player.name + " you found stairs!");
 			// action = confirm("Do you want to go upstairs? 'yes' or 'no' ")
 			// if (action == true) {
 			// 	// stairs1();
-			// } 
-			action = confirm("The noise is around the corner, seems risky \n Do you want to go?");
-			if (action) {
-				chestorMonster();
-				if (Object.getOwnPropertyNames(enemy).length != 0) { // || empty object?
-					//fight or flight monster
-					console.log(enemy.damage);
-					fightorflight();
-				} else {
-					alert('Must have been farther down the hallway')
-				}
-			} else {
-				alert("Probably better to play it safe.");
-			}
+			// } else {
+			// 	break;
+			// }
+			// action = confirm("The noise is around the corner, seems risky \n Do you want to go?");
+			// if (action) {
+			// 	chestorMonster();
+			// 	if (Object.getOwnPropertyNames(enemy).length != 0) { // || empty object?
+			// 		//fight or flight monster
+			// 		console.log(enemy.damage);
+			// 		fightorflight();
+			// 	} else {
+			// 		textDialogue(narrator, "Narocube: Must have been farther down the hallway");
+			// 	}
+			// } else {
+			// 	textDialogue(narrator, "Narocube: Probably better to play it safe.");
+			// }
 
 		break;
 
 		case 'explore':
-			alert("Good choice, it's probably just a crew members dog");
-
+			textDialogue(narrator, "Narocube: Good choice, it's probably best to keep lookin around, wouldn't want to bother them");
 			exploreship(gameobj.explore);
+			gameobj.explore++;
 		break;
 
 		case 'sit tight':
-			alert("Yeah you are probably right, no reason to bother them at work");
+			textDialogue(narrator, "Narocube: Yeah you are probably right, no reason to bother them at work, its not like you're not scared, are you?");
 			gameobj.sittight++;
-			helpJohn();
 		break;
-
-		default:
-			alert("Try again, maybe; 'go look', 'explore', or 'sit tight'");
-			upstairSounds();
 	}
 }
 
 
 //John asks for help behind the door
-function helpJohn() {
+function helpJohn(action) {
 
 	alert("John screams for help from upstairs");
 	var action = prompt("What a could his problem be! \n Do you want to:'go look' 'explore' the ship, or 'sit tight'").toLowerCase();
@@ -406,40 +347,42 @@ function helpJohn() {
 		break;
 
 		case 'explore':
-			alert("Good choice, it's probably just cargo shifting");
-
+			textDialogue(narrator, "Narocube: Good choice, we can keep stealing stuff, sounds like that will take a while.");
 			exploreship(gameobj.explore);
+			gameobj.explore++;
 		break;
 
 		case 'sit tight':
-
-
+			textDialogue(narrator, "Narocube: Good choice, Nothing puts me to sleep like the screems of my friends");
 			gameobj.sittight++;
-			console.log(gameobj.sittight);
-			vehicleShaking();
 		break;
-
-		default:
-			alert("Try again, maybe; 'go look', 'explore', or 'sit tight'");
-			helpJohn();
 	}
 }
 
 //vehicle shakes during landing
 function vehicleShaking() {
 
-	alert("vehicle begins to shake uncontrolably \n we must be starting the landing sequence");
 
 	if ( gameobj.sittight == 6) {
 		//John comes throught the door and tells you to hold on tight, the queen doese not emerge and you win
 		winnerWinner();
 	} else {
+		textDialogue(narrator, "Narocube: Holy shit, what is that, how can something so large be alive");
+		textDialouge(narrator, "Narocube: It must be some sort of queen animal")
 		//queen falls through the ceiling, when she gets to 75% heath john will come in and attack with you
-		//if the queen falls you win, if you die you loose
+		//if the queen dies you win, if you die you loose
 		var queen = new monsterBoss();
 		if (queen.health != 0) {
+			if (helpjohn === true){
+
+			} else if (queen.health <= (.75*queen.maxhp)) {
+
+			}
+
 			//fight her
+			
 		} else {
+			textDialogue(narrator, "Narocube: You did it she's DEAD");
 			winnerWinner();
 		}
 	}
@@ -448,8 +391,14 @@ function vehicleShaking() {
 //vehicle has landed
 function winnerWinner() {
 	// John walks to you and says seems like its about that time, bay doors open and you say YEE-HA
-	alert("Hey, you win! \n Go home... refresh to play again");
 
+	textDialogue(john, "John: Hey, well that wasn't so bad.");
+	textDialogue(player, player.name + ": Yeah I suppose that could have gone worse");
+	textDialogue(john, "John: Looks like its about that time...");
+	textDialogue(player, player.name + ": YEE-HAW");
+
+	// add firework image and such to signify more than just text
+	textDialogue(narrator, "Narocube: Hey, you win! \n Go home... refresh to play again");
 }
 
 

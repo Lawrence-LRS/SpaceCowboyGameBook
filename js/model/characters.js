@@ -130,6 +130,11 @@ function character(name, type){
 	this.criticalHit = 2 + criticalMod;
 	this.damage = this.weapon.damage
 
+	this.weaponUpdate = function (newWeapon){
+		player.weapon = newWeapon;
+		player.damage = newWeapon.damage;
+	}
+
 };
 
 // creating companion character with stats. ( has increased damage ranged weapon )
@@ -182,6 +187,7 @@ function monsterBoss(sittight) {
 	this.damage = 25;
 	this.damageR = 50;
 	this.health = 200;
+	this.maxhp = this.health;
  
 // one game victory mode is to ignore all signs of danger, John will appear on the deck and the 
 // DEMIGORGON wont show herself, sittight is a counter for ignored warnings.
