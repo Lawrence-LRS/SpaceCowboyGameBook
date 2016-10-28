@@ -15,47 +15,84 @@ function textDialogue(who, str) {
 
 // A forum submition callback for players to choose explore, sit tight and go look.
 function formSubmit(callback){
-	$('form').submit(function() {	
-		var pass = $('#action').val().toLowerCase();
+	$('form').submit(function() {	//initiate submit listener
+		var pass = $('#action').val().toLowerCase(); // grab the value of the submit forum in lowercase
 
 	    if ( pass !== ""){
-	    	//doesn't matter for name, just not empty
-	    	if (pass === "explore" || pass === "sit tight" || pass ==="go look") {
+	    	if (pass === "explore" || pass === "sit tight" ) {
 	    		textDialogue(player, player.name +": I think that I will" + " " + pass);
 	    		callback(pass);
+
 	    		gameobj.storyPoint++;
 	    		$('form').unbind();
 	    		mainLoop();	
+
+	    	} else if ( pass === "go look" ) {
+	    		if(gameobj.storyPoint <= 4 ) { // missions less than level 4 dont initiate combat 
+	    			textDialogue(player, player.name +": I think that I will" + " " + pass);
+		    		callback(pass);
+
+		    		gameobj.storyPoint++;
+		    		$('form').unbind();
+		    		mainLoop();	
+
+	    		} else {
+					textDialogue(player, player.name +": I think that I will" + " " + pass);
+					textDialogue(narrator, levelDialoge.callback.goLook); //array of asking if they want to check out the thing yes no
+					goLookandFight(callback);
+	    		}
+	    		
 	    	} else {
 				textDialogue(narrator, "Narocube: Try again, maybe 'go look', 'explore', or 'sit tight'");
 	    	}
+
 	    } else {
 	    	textDialogue(narrator, "Narocube: Please choose an action to take not ' '");	
 	    }
+
 	    return false;
 	});
 }
 
 // A forum sbmition call back to replace confirm functions. inputs are either a Yes or no
-function confirmSubmit(){
+function goLookandFight(callback){
 	$('form').unbind();
 
 	$('form').submit(function() {	
 		var pass = $('#action').val().toLowerCase();
 
-	    if ( pass !== ""){
+	    if ( pass !== "") {
 	    	//doesn't matter for name, just not empty
-	    	if (pass === "yes") {
-	    		textDialogue(player, player.name + ": " pass + " I will.");
-	    		return true;
+	   //  	if (pass == "yes") {
+	   //  		textDialogue(player, (player.name + ": " + pass + " I will."));
+	   //  		textDialogue(narrator, levelDialoge.callback.goLookyes); // snarky comments
 
-	    	} else if (pass === "no"){
-	    		textDialogue(player, player.name + ": " pass + " thank you.");
-	    		return false;
+				// chestorMonster();
 
-	    	}else {
-				textDialogue(narrator, "Narocube: Try again, maybe a 'yes' or 'no' ");
-	    	}
+				// if (Object.getOwnPropertyNames(enemy).length != 0) { // || empty object?
+				// 	//fight or flight monster
+				// 	fightorflight();
+
+
+
+
+				// } else {
+				// 	textDialogue(narrator, levelDialoge.callback.noMonster); // array of compasion saying it was probably a good idea
+				// 	gameobj.storyPoint++;
+	   //  			$('form').unbind();
+	   //  			mainLoop();	
+				// }
+
+	   //  	} else if (pass == "no") {
+	   //  		textDialogue(player, (player.name + ": " + pass + " thank you."));
+				// textDialogue(narrator, levelDialoge.callback.goLookno);
+				// gameobj.storyPoint++;
+    // 			$('form').unbind();
+    // 			mainLoop();	
+
+	   //  	} else {
+				// textDialogue(narrator, "Narocube: Try again, maybe a 'yes' or 'no' ");
+	   //  	}
 	    } else {
 	    	textDialogue(narrator, "Narocube: Please choose an action to take not ' '");	
 	    }
@@ -65,34 +102,34 @@ function confirmSubmit(){
 
 // A forum sbmition call back to replace prompt attack functions. inputs are either a fight or run
 function fightSubmit(callback){
-	$('form').unbind();
+	// $('form').unbind();
 
-	$('form').submit(function() {	
-		var pass = $('#action').val().toLowerCase();
+	// $('form').submit(function() {	
+	// 	var pass = $('#action').val().toLowerCase();
 
-	    if ( pass !== ""){
-	    	//doesn't matter for name, just not empty
-	    	if (pass === "fight") {
-	    		textDialogue(player, player.name + ": " pass + " I will.");
-
-
-
-	    		callback(pass);
-	    		mainLoop();	
-	    	} else if (pass === "run"){
-	    		textDialogue(player, player.name + ": " pass + " thank you.");
+	//     if ( pass !== ""){
+	//     	//doesn't matter for name, just not empty
+	//     	if (pass === "fight") {
+	//     		textDialogue(player, player.name + ": " pass + " I will.");
 
 
 
+	//     		callback(pass);
+	//     		mainLoop();	
+	//     	} else if (pass === "run"){
+	//     		textDialogue(player, player.name + ": " pass + " thank you.");
 
-	    	}else {
-				textDialogue(narrator, "Narocube: Try again, maybe a 'yes' or 'no' ");
-	    	}
-	    } else {
-	    	textDialogue(narrator, "Narocube: Please choose an action to take not ' '");	
-	    }
-	    return false;
-	});
+
+
+
+	//     	}else {
+	// 			textDialogue(narrator, "Narocube: Try again, maybe a 'yes' or 'no' ");
+	//     	}
+	//     } else {
+	//     	textDialogue(narrator, "Narocube: Please choose an action to take not ' '");	
+	//     }
+	//     return false;
+	// });
 }
 
 
@@ -238,7 +275,30 @@ function dead(){
 				
 		default:
 			textDialogue(narrator, "Narocube: I'll take that as a yes!");
-			initiateGame();
+
+			////////////////////////////////////////////////////////////////////////////////////////////////////
+			//					  					RESTARTING variables								   	//
+				var gameobj = {sittight:0, // counter for sittin tight through game
+								 explore:0, // counter to determine number of times explore is choosen
+								  upstiars:false, // counter not used yet
+								    submitval:'',
+								     storyPoint:0,}; // counter to progress game through 'levels'
+
+					//item preload for game use
+				var amulet = {};
+				var bodyArmor = {};
+				var shield = {};
+				var consumable = {};
+
+
+								//character initiation
+				var player = {voice: 'white'};	// active player
+				var enemy = {};					// Empty monster object, when defeated it empties and allows next monster to populate
+				var john = {};                  // John character to help you fight boss
+				var narrator = {voice: 'blue'};
+
+				// wait 5 seconds and rerun initial game.
+				setTimeout(mainLoop,5000);
 	}
 }
 
