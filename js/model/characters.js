@@ -68,8 +68,8 @@ function character(name, type){
 	this.type = type;
 	this.voice = 'white';
 
-	this.weapon = new weapons(0);
-	this.consumable = {};
+	this.weapon = new Weapons(0);
+	this.potion = {};
 	this.amulet = {};
 	this.shield = {};
 	this.bodyArmor = {};
@@ -130,7 +130,7 @@ function character(name, type){
 	this.criticalHit = 2 + criticalMod;
 	this.damage = this.weapon.damage
 
-	this.weaponUpdate = function (newWeapon){
+	this.weaponUpdate = function (newWeapon) {
 		player.weapon = newWeapon;
 		player.damage = newWeapon.damage;
 	}
@@ -144,7 +144,10 @@ function Companion() {
 	this.health = 200;
 	this.evasion = .2;
 	this.criticalHit = 2;
-	this.weapon = new weapons(6);
+	this.weapon = new Weapons(6);
+	this.damage = this.weapon.damage;
+	this.amulet = {};
+	this.johnfirst = true;
 }
 
 //so I can call monster and either roll for difficulty or just call them out
@@ -156,7 +159,7 @@ function Monster(difficulty) {
 		case 0:
 			this.name = "Blood Hound";
 			this.damage = 25;
-			this.health= 200;
+			this.health= 100;
 			this.mvspeed = 6;
 			this.evasion = 1;
 		break;
@@ -164,9 +167,9 @@ function Monster(difficulty) {
 		case 1:
 			this.name = "Roachling";
 			this.damage = 20;
-			this.health= 300;
+			this.health= 200;
 			this.mvspeed = 5;
-			this.evasion = 1;
+			this.evasion = 2;
 		break;
 
 		case 2:

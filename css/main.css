@@ -2,18 +2,22 @@ html, body {
   font-family: 'Merriweather', serif;	
   margin: 0;
   padding: 0;
+  height: 100%;
   background-color: black;
 }
 
-/* *{border: 1px dashed blue;
-}
-*/
+/* *{border: 1px dashed white;
+}*/
+
 /*Header information ALL PAGES*/
 .header{
+	position:relative;
 	background-color: #333A49;
 	height: 100px;
 	
-	margin: -50px -30px 0 -30px;
+	margin-left:-30px;
+	margin-right:-30px;
+	margin-top: -50px;
 	min-width: 750px;
 /*	position:fixed; when I get Jquery added will hide 
 on scroll down and appear on scroll up
@@ -28,6 +32,7 @@ on scroll down and appear on scroll up
 
 	margin-top: -10px;
 
+	z-index: 1;
 }
 
 .header .title{
@@ -51,7 +56,7 @@ on scroll down and appear on scroll up
 	text-align: center;
 	margin: 0;
     padding: 0;
-	margin-top:20px;
+	margin-top:25px;
 	font-size: 24px;
 }
 
@@ -72,17 +77,21 @@ on scroll down and appear on scroll up
 	color:white;
 }
 
+
 .jumbotron{
-  height: 500px;
+  height: 410px;
   background-color: black;
   margin:0;
-  padding-bottom: -30px;
+  padding:0 0 -30px 0;
+  
   border-bottom: 4px rgb(58, 252, 0) solid;
 }
 
 .Jumbo-title{
   position: relative;
-  margin-top: 325px;
+
+  display:block;
+  margin: 375px auto;
 }
 
 .Jumbo-title h2{
@@ -101,18 +110,22 @@ on scroll down and appear on scroll up
 	background-image: url("../img/space_cowboy_by_mccullough.jpg");
 	background-position:center;
 	background-size:cover;
-	width: 300px;
+	width: 600px;
 	height: 300px;
+	margin:10px auto;
+	z-index: 0;
 }
 
 
 
-#profile_image{
-	background-image: url("../img/imageToCome.jpg");
+#profile{
+	background-image: url("../img/profileimg.jpg");
 	background-position:center;
 	background-size:cover;
-/*	width:300px;
-	height:300px;*/
+	width:300px;
+	height:300px;
+	margin:10px auto;
+	z-index: 0;
 }
 
 
@@ -123,7 +136,7 @@ on scroll down and appear on scroll up
 
 
 .box {
-	width: 50%;
+	width: 60%;
 	margin: 0px auto;
 }
 
@@ -143,6 +156,12 @@ on scroll down and appear on scroll up
 	font-size: 24px;
 	font-weight: bold;
 	color: white;
+	
+}
+
+.dialogue {
+	max-height:600px;
+	overflow: auto;
 }
 
 
@@ -151,17 +170,24 @@ on scroll down and appear on scroll up
 
 
 
-
-
+.wrapper {
+	min-height:100%;
+	position:relative;
+}
 
 
 /*Footer section for copyright image placement and colors*/
 .footer{
-	background-color: #C0C0C0;
-	color:white;
-	position: relative;
-   	min-width: 750px;
-   	height:45px;
+	background-color: #333A49;
+	color: white;
+
+	position: absolute;
+	right:0;
+ 	bottom: 0;
+ 	left: 0;
+
+  	min-width: 750px;
+   	height: 45px;
 }
 .copyRightSpot{
 	margin-top:10px;

@@ -20,7 +20,7 @@
 
 </head>
 <body>
-
+<div class = "wrapper">
 <!-- Jumbotron for skyline to be behind header -->
  	<div class="jumbotron">
 <!-- Header section (will have it hide with Jquery as you scroll down page) -->
@@ -28,46 +28,45 @@
 			<div class="container-fluid">
 				<!-- logo section fixed sized -->
 				<div class="row">
-					<div class=" col-xs-6 .col-sm-6 col-md-6">
+					<div class=" col-xs-6 col-sm-6 col-md-6">
 						<a href="index.html"><div class="titleLogo"> 
 								<div class="logo"><img src="img/LRS_Logo.png" class="img-circle"></div>
 								<p class="title">  Little Rocket Studio </p>
 							</div></a>
 					</div>
 					<!-- Right side NAV bar -->
-					<div class=" col-xs-6 .col-sm-6 col-md-6">			
+					<div class=" col-xs-6 col-sm-6 col-md-6">			
 						<ul class="navagation" >
-							<li class="menu" > <a class="links" href="pages/About.html"> About </a> </li>
+							<li class="menu" > <a class="links" href="../../About.html"> About </a> </li>
 							<!-- Portfolio is a dropdrop (Jquery) for multi-selection -->
 							<li class="menu" class="dropdown">
 							<a class="links" class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" > Portfolio <!-- (later accordian) --> <span class="caret"> </span></a>
 								<ul class="dropdown-menu">
-									<li> <a href="#"> Software Development </a> </li> 
-									<li> <a href="#"> Game Development </a> </li> 
+									<li> <a href="../../softDevelopment/softdevindex.html"> Software Development </a> </li> 
+									<li> <a href="../gamedevIndex.html"> Game Development </a> </li> 
 									<li> <a href="#"> Web Development </a> </li> 
-									<li> <a href="#"> Graphic Design </a> </li>  
+									<li> <a href="../../GraphicDesign.html"> Graphic Design </a> </li>  
 								</ul>
 						    </li>
-							<li class="menu" > <a class="links" href="pages/Contact.html"> Contact </a> </li>
+							<li class="menu" > <a class="links" href="../../Contact.html"> Contact </a> </li>
 						</ul>
 					</div>
 				</div>
 			</div>
-
-			<div class="row">
-				<div class=" col-xs-8 .col-sm-8 col-md-8">
-					<div id="spaceship">
-					<a style="font-size: 10px" href="http://mccullough.deviantart.com/art/Space-Cowboy-208681546" target="_blank"> Art link</a>
+			<div class="container-fluid">
+				<div class="row">
+					<div class=" col-xs-8 col-sm-8 col-md-8">
+						<div id="spaceship">
+							<a style="font-size: 10px" href="http://mccullough.deviantart.com/art/Space-Cowboy-208681546" target="_blank"> Art link</a>
+						</div>
 					</div>
-				</div>
 
-				<div class=" col-xs-4 .col-sm-4 col-md-4">
-					<div id="profile_image">
-
+					<div class=" col-xs-4 col-sm-4 col-md-4">
+						<div id="profile">
+						</div>
 					</div>
 				</div>
 			</div>
-
 		</div>
 
 
@@ -76,7 +75,7 @@
 		<div class="container-fluid">
 			<div class="row">
 				<div class="Jumbo-title">
-					<h2> <strong> Lawrence Goedrich's choose your own adventure game. Codeacademy Javascript final project.  </strong> </h2>
+					<h2> <strong> Lawrence Goedrich's choose your own adventure game. Codeacademy Javascript final project. </strong> </h2>
 				</div>
 			</div>
 		</div>
@@ -98,7 +97,7 @@
 
 
 
-
+	
 
 
 	<!-- footer (shameless tradmark and social meadia plugs) -->
@@ -123,22 +122,10 @@
 			</div>
 		</div>
 	</div>
-
+</div>
 
 
 	
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -153,7 +140,7 @@
 					<div class="Lcharacterimg">
 						<div class="img-thumbnail" id="rouge"></div>
 						<div class="caption">
-							<h4 class="third_WD_title"> Rouge </h4>
+							<h4 class="third_WD_title" > Rouge </h4>
 						</div>
 					</div>
 				</div>
@@ -162,7 +149,7 @@
 					<div class="Ccharacterimg">
 						 <div class="img-thumbnail" id="soldier"></div>
 						<div class="caption">
-							<h4 class="third_WD_title"> Soldier </h4>
+							<h4 class="third_WD_title" > Soldier </h4>
 						</div>
 					</div>
 				</div>
@@ -171,7 +158,7 @@
 					<div class="Rcharacterimg">
 						<div class="img-thumbnail" id="tank"></div>
 						<div class="caption">
-							<h4 class="third_WD_title"> Tank </h4>
+							<h4 class="third_WD_title" > Tank </h4>
 						</div>
 					</div>
 				</div>
@@ -184,9 +171,7 @@
 		<div class="container-fluid">
 			<button id="start" type="button" class="btn btn-secondary btn-lg">Start</button>
 		</div>
-	</div>	
-
-
+	</div>
 
 
 </body>

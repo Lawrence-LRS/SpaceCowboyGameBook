@@ -6,11 +6,13 @@
 //                       Forum submitions and text boxes                                //
 
 // Function that displays a string which is passed to it
-function textDialogue(who, str) {
+function textDialogue(who, str, intv) {
+	setTimeout(function(){
 		var action = $('<p>').text(str);
 		action.css('color', who.voice);
 		$(action).hide().prependTo('.dialogue').fadeIn('slow');
 		$('#action').val("");
+	}, intv);	
 }
 
 // A forum submition callback for players to choose explore, sit tight and go look.
@@ -19,35 +21,46 @@ function formSubmit(callback){
 		var pass = $('#action').val().toLowerCase(); // grab the value of the submit forum in lowercase
 
 	    if ( pass !== ""){
-	    	if (pass === "explore" || pass === "sit tight" ) {
-	    		textDialogue(player, player.name +": I think that I will" + " " + pass);
-	    		callback(pass);
 
-	    		gameobj.storyPoint++;
-	    		$('form').unbind();
-	    		mainLoop();	
-
-	    	} else if ( pass === "go look" ) {
-	    		if(gameobj.storyPoint <= 4 ) { // missions less than level 4 dont initiate combat 
-	    			textDialogue(player, player.name +": I think that I will" + " " + pass);
+	    	switch (pass) {
+	    		case 'sit tight':
+					textDialogue(player, (player.name +": I think that I will" + " " + pass), 0);
 		    		callback(pass);
 
-		    		gameobj.storyPoint++;
-		    		$('form').unbind();
-		    		mainLoop();	
+		    		advanceStory();
+	    		break;
 
-	    		} else {
-					textDialogue(player, player.name +": I think that I will" + " " + pass);
-					textDialogue(narrator, levelDialoge.callback.goLook); //array of asking if they want to check out the thing yes no
-					goLookandFight(callback);
-	    		}
-	    		
-	    	} else {
-				textDialogue(narrator, "Narocube: Try again, maybe 'go look', 'explore', or 'sit tight'");
+	    		case 'explore':
+		    		textDialogue(player, (player.name +": I think that I will" + " " + pass), 0);
+		    		callback(pass);
+	    		break;
+
+	    		case 'go look':
+	    			if(gameobj.storyPoint <= 4 ) { // missions less than level 4 dont initiate combat 
+		    			textDialogue(player, (player.name +": I think that I will" + " " + pass), 0);
+			    		callback(pass);
+			    		advanceStory();
+			    	// } else if ( ){
+
+		    		} else {
+						textDialogue(player, (player.name + ": I think that I will" + " " + pass), 0);
+
+						textDialogue(narrator, levelDialogue[callback.name].goLook, 1000); //array of asking if they want to check out the thing yes no
+						goLookandFight(callback);
+		    		}
+	    		break;
+
+	    		case 'p':
+	    			useConsume();
+	    			textDialogue(narrator, "Narocube: Now that that is taken care of, maybe try 'go look', 'explore', or 'sit tight'", 1000);
+	    		break;
+
+	    		default:
+	    			textDialogue(narrator, "Narocube: Try again, maybe 'go look', 'explore', or 'sit tight'", 0);
+	    	
 	    	}
-
 	    } else {
-	    	textDialogue(narrator, "Narocube: Please choose an action to take not ' '");	
+	    	textDialogue(narrator, "Narocube: Please choose an action to take not ' '", 0);
 	    }
 
 	    return false;
@@ -62,95 +75,60 @@ function goLookandFight(callback){
 		var pass = $('#action').val().toLowerCase();
 
 	    if ( pass !== "") {
-	    	//doesn't matter for name, just not empty
-	   //  	if (pass == "yes") {
-	   //  		textDialogue(player, (player.name + ": " + pass + " I will."));
-	   //  		textDialogue(narrator, levelDialoge.callback.goLookyes); // snarky comments
+	    	if (pass == "yes") {
+	    		textDialogue(player, (player.name + ": " + pass + " I will."), 0);
+	    		textDialogue(narrator, levelDialogue[callback.name].goLookyes, 1000); // snarky comments
 
-				// chestorMonster();
+	    		if (callback.name == "helpJohn" ){
+	    			gameobj.helpedJohn = true
+				}
 
-				// if (Object.getOwnPropertyNames(enemy).length != 0) { // || empty object?
-				// 	//fight or flight monster
-				// 	fightorflight();
+				chestorMonster(callback);
 
+				if (Object.getOwnPropertyNames(enemy).length != 0) { // || empty object?
+					//fight or flight monster
+					fightorflight();
+				} else {
+					textDialogue(narrator, levelDialogue[callback.name].noMonster, 000);
+				}
 
+	    	} else if (pass == "no") {
+	    		textDialogue(player, (player.name + ": " + pass + " thank you."), 0);
+				textDialogue(narrator, levelDialogue[callback.name].goLookno, 1000);
+				advanceStory();
 
-
-				// } else {
-				// 	textDialogue(narrator, levelDialoge.callback.noMonster); // array of compasion saying it was probably a good idea
-				// 	gameobj.storyPoint++;
-	   //  			$('form').unbind();
-	   //  			mainLoop();	
-				// }
-
-	   //  	} else if (pass == "no") {
-	   //  		textDialogue(player, (player.name + ": " + pass + " thank you."));
-				// textDialogue(narrator, levelDialoge.callback.goLookno);
-				// gameobj.storyPoint++;
-    // 			$('form').unbind();
-    // 			mainLoop();	
-
-	   //  	} else {
-				// textDialogue(narrator, "Narocube: Try again, maybe a 'yes' or 'no' ");
-	   //  	}
+	    	} else if ( pass == 'p') {
+    			useConsume();
+    			textDialogue(narrator, "Narocube: Now that that is taken care of, maybe try 'go look', 'explore', or 'sit tight'", 1000);
+	    	}else {
+				textDialogue(narrator, "Narocube: Try again, maybe a 'yes' or 'no' ", 0);
+	    	}
 	    } else {
-	    	textDialogue(narrator, "Narocube: Please choose an action to take not ' '");	
+	    	textDialogue(narrator, "Narocube: Please choose an action to take not ' '", 0);
 	    }
 	    return false;
 	});
 }
 
-// A forum sbmition call back to replace prompt attack functions. inputs are either a fight or run
-function fightSubmit(callback){
-	// $('form').unbind();
-
-	// $('form').submit(function() {	
-	// 	var pass = $('#action').val().toLowerCase();
-
-	//     if ( pass !== ""){
-	//     	//doesn't matter for name, just not empty
-	//     	if (pass === "fight") {
-	//     		textDialogue(player, player.name + ": " pass + " I will.");
-
-
-
-	//     		callback(pass);
-	//     		mainLoop();	
-	//     	} else if (pass === "run"){
-	//     		textDialogue(player, player.name + ": " pass + " thank you.");
-
-
-
-
-	//     	}else {
-	// 			textDialogue(narrator, "Narocube: Try again, maybe a 'yes' or 'no' ");
-	//     	}
-	//     } else {
-	//     	textDialogue(narrator, "Narocube: Please choose an action to take not ' '");	
-	//     }
-	//     return false;
-	// });
-}
-
 
 //////////////////////////////////////////////////////////////////////////////////////////
 //                       Character specific functions                                   //
-
+ 
 // bring up character selection and images
 function characterChoice (name, chartype) {
 
 	switch(chartype){
 
 		case 'rouge':
-			textDialogue(narrator, "You have choosen the rouge,\n be as cunning as a fox!");
+			textDialogue(john, "John: Oh thats right you are a rouge,\n be as cunning as a fox!");
 		break;
 
 		case 'soldier':
-			textDialogue(narrator, "You have choosen the soldier,\nstay your distance to stay alive!");
+			textDialogue(john, "John: Oh thats right you are a soldier,\nstay your distance to stay alive!");
 		break;
 
 		case 'tank':
-			textDialogue(narrator, "You have choosen the tank,\nGET UP IN THERE!");
+			textDialogue(john, "John: Oh thats right you are a tank,\nGET UP IN THERE!");
 		break;
 
 	}
@@ -166,10 +144,10 @@ function characterChoice (name, chartype) {
 	// $(document).keydown(function(key) {
 	// 	if (key == 67) {
 	// 		alert("Your health is" + " " + player.health);
-	// 		var use = confirm("would you like to use a consumable");
+	// 		var use = confirm("would you like to use a Potion");
 	// 		if (use == true){
 	// 			useConsume();
-	// 			player.consumable = {};
+	// 			player.Potion = {};
 	// 		} else {
 	// 			return;
 	// 		}
@@ -181,125 +159,82 @@ function characterChoice (name, chartype) {
 // explore function for player choices
 function exploreship(){
 	switch(gameobj.explore) {
-		case 0:			
-			textDialogue(narrator, "Narocube: Hey," + " " + player.name + " you found a Weapons Chest!");
-			setTimeout(chestW, 1000);
-		break;
-
-		case 1:
-			textDialogue(narrator, "Narocube: Hey," + " " + player.name + " you found a Items Chest!");
-			chestI();
-		break;
-
-		case 2:
-			textDialogue(narrator, "Narocube: Hey," + " " + player.name + " you found a Consumables Chest!");
-			chestC();
-		break;
-
 		case 3:
-			textDialogue(narrator, "Narocube: Hey," + " " + player.name + " you found a Random Chest!");
-			chestR();
+		case 0:			
+			textDialogue(narrator, "Narocube: Hey, " + player.name + " you found a Weapons Chest!", 1000);
+			chestW();
 		break;
 
 		case 4:
-			// gameobj.explore++;
+		case 1:
+			textDialogue(narrator, "Narocube: Hey, " + player.name + " you found a Items Chest!", 1000);
+			chestI();
 		break;
 
 		case 5:
-			// gameobj.explore++;
+		case 2:
+			textDialogue(narrator, "Narocube: Hey, " + player.name + " you found a Potions Chest!", 1000);
+			chestP();
+		break;
+
+		default:
+			textDialogue(narrator, "Narocube: Hey, " + player.name + " you found a Random Chest!", 1000);
+			chestR();
 		break;
 	}
-}
-
-//checks current weapon and replaces with new
-function weaponCheck (newWeapon) {
-	if (player.weapon.name == "FIST OF FURRY") {
-		player.weaponUpdate(newWeapon);
-
-		textDialogue(narrator, "Narocube: You have just recieved the" + player.weapon.name + "weapon \n which gives you" + player.damage + "damage");
-	} else {
-		textDialogue(narrator, "Narocube: You already have " + " " + player.weapon.name + "with" + player.weapon.damage + "\n do you wish to replace it with" + newWeapon.name + "with" + newWeapon.damage + "?");
-		var replacepWeapon = confirmSubmit();
-
-		if (replacepWeapon == true) {
-			player.weaponUpdate(newWeapon);
-			textDialogue(narrator, "Narocube: You have just recieved the" + player.weapon.name + "weapon \n which gives you" + player.weapon.damage+  "damage");
-		} else {
-			return;
-		}
-	} 
 }
 
 // uses potion
 function useConsume() {
 
-	if (player.consumable != null) {
-		player.health = player.health + player.consumable.life;
-		player.consumable = null;
+	if ( isEmpty(player, 'potion') ){
+		textDialogue(narrator, "Narocube: You do not have anything to consume", 0);		
+	} else {
+		player.health = player.health + player.potion.life;
+		textDialogue(narrator, ("Narocube: You're new health is " + player.health), 0);
+		player.potion = {};
 
 		if (player.health > player.hpmax) {
 			player.health = player.hpmax;
 		} else {
 			return;
 		}
-
-	} else {
-		textDialogue(narrator, "Narocube: You do not have anything to consume");
 	}
 }
 
 // If you die
 function dead(){
 
-	textDialogue(narrator, "Narocube: It seems as though you have fallen great warrior");
-	textDialogue(narrator, "Narocube: Try again? maybe this time you sit tight or explore more?");
+	textDialogue(narrator, "Narocube: It seems as though you have fallen great warrior", 0);
+	textDialogue(narrator, "Narocube: Try again? maybe this time you sit tight or explore more?", 1000);
 
-	var action = prompt("Would you like to play again, yes, no").toLowerCase();
+	$('form').unbind();
 
-	switch (action) {
-		case 'yes':
-		initiateGame();
-		break;
+	$('form').submit(function() {	
+		var pass = $('#action').val().toLowerCase();
 
-		case 'no':
-			textDialogue(narrator, "Narocube: Hope you enjoyed your time anyway.");
-			// $('.gameover').toggle();
-			//end game, idk how
-		break;
+	    if ( pass !== "") {
+	    	if (pass == "yes") {
+	    		resetgame();
+	    	} else if (pass == "no") {
+	    		textDialogue(narrator, "Narocube: Hope you enjoyed your time anyway.",0);
+	    		$('form').unbind();
+				// $('.gameover').toggle(); // some game over text 
 
-		case 'one more time':
-			// heal player to half health and start back where he was
-			player.health = player.hpmax/2;
-			return;
-		break;
-				
-		default:
-			textDialogue(narrator, "Narocube: I'll take that as a yes!");
-
-			////////////////////////////////////////////////////////////////////////////////////////////////////
-			//					  					RESTARTING variables								   	//
-				var gameobj = {sittight:0, // counter for sittin tight through game
-								 explore:0, // counter to determine number of times explore is choosen
-								  upstiars:false, // counter not used yet
-								    submitval:'',
-								     storyPoint:0,}; // counter to progress game through 'levels'
-
-					//item preload for game use
-				var amulet = {};
-				var bodyArmor = {};
-				var shield = {};
-				var consumable = {};
-
-
-								//character initiation
-				var player = {voice: 'white'};	// active player
-				var enemy = {};					// Empty monster object, when defeated it empties and allows next monster to populate
-				var john = {};                  // John character to help you fight boss
-				var narrator = {voice: 'blue'};
-
-				// wait 5 seconds and rerun initial game.
-				setTimeout(mainLoop,5000);
-	}
+			} else if ( pass === "one more time"){
+				// heal player to half health and start back where he was
+				player.health = player.hpmax/2;
+				$('form').unbind();
+				mainLoop();
+	    	} else {
+				textDialogue(narrator, "Narocube: I'll take that as a yes!",0);
+				resetgame();
+	    	}
+	    } else {
+	    	textDialogue(narrator, "Narocube: Please choose an action to take not ' '", 0);
+	    }
+	    return false;
+	});
 }
 
 
@@ -308,204 +243,352 @@ function dead(){
 
 // opens random chest
 function chestR() {
-	textDialogue(narrator, "Narocube: Would you like to open this Random chest?");
-	var open = confirmSubmit();
-
+	textDialogue(narrator, "Narocube: Would you like to open this Random chest?", 2000);
 	var random = randomRoll(10,0);
 
-	if (open == true) {
-		if (random >=9) {					 // 20% chance
-			chestW();
-		} else if (random < 9 && random >=5){//50% chance
-			chestI();
-		} else {							 //30% chance
-			chestC();
-		}
+	$('form').unbind();
 
-	} else {
-		// gives players a second chance.
-		textDialogue(narrator, "Narocube: Are you sure?");
-		open = confirmSubmit();
+	$('form').submit(function(random) {	
+		var pass = $('#action').val().toLowerCase();
+		
+	    if ( pass !== "") {
+	    	if (pass == "yes") {
+				if (random >=9) {					 // 20% chance
+					textDialogue(narrator, "Narocube: Hey, " + player.name + " This chest had Weapons!", 1000);
+					setTimeout(chestW, 1000);
+				} else if (random < 9 && random >=5){//50% chance
+					textDialogue(narrator, "Narocube: Hey, " + player.name + " This chest had Items!", 1000);
+					setTimeout(chestI, 1000);
+				} else {							 //30% chance
+					textDialogue(narrator, "Narocube: Hey, " + player.name + " This chest had Potions!", 1000);
+					setTimeout(chestP, 1000);
+				}	
 
-		if (open == true) {
-			textDialogue(narrator, "Narocube: oookay");
-			return;
-		} else {
-			chestR();
-		}
-	}
+	    	} else if (pass == "no") {
+	    		// gives players a second chance.
+	    		setTimeout(chestNoSubmit(chestR),1000);
+
+	    	} else {
+				textDialogue(narrator, "Narocube: Try again, maybe a 'yes' or 'no' ", 0);
+	    	}
+	    } else {
+	    	textDialogue(narrator, "Narocube: Please choose an action to take not ' '", 0);
+	    }
+	    return false;
+	});
 }
 
 // opens weapons chest
 function chestW () {
-	textDialogue(narrator, "Narocube: Would you like to open this weapons chest?");
+	textDialogue(narrator, "Narocube: Would you like to open this weapons chest?", 2000);
 
+	$('form').unbind();
 
-	var open = confirmSubmit();
-	if (open == true) {
-		// weapon(0) = fist
-		switch(player.type) 
-		{
-		    case "rouge":
-			// weapons dual = 1,2
-		 	  	var newWeapon = new weapons(randomRoll(2,1));
-		 	  	weaponCheck(newWeapon);
-		    break;
+	$('form').submit(function() {	
+		var pass = $('#action').val().toLowerCase();
 
-		    case "soldier":
-		    // weapons dual = 5,6
-				var newWeapon = new weapons(randomRoll(6,5));
-				weaponCheck(newWeapon);
-		     break;
+	    if ( pass !== "") {
+	    	if (pass == "yes") {
+				// weapon(0) = fists ( always replaced )
+				switch(player.type) {
+				    case "rouge":
+					// weapons dual = 1,2
+				 	  	var newWeapon = new Weapons(randomRoll(2,1));
+				 	  	weaponCheck(newWeapon);
+				    break;
 
-		    case "tank":
-			// weapons dual = 5,6
-				var newWeapon = new weapons(randomRoll(4,3));
-				weaponCheck(newWeapon);
-		     break;
-		     // unable to activate this character
-		   //  case "april":
-		   // god class, all weapons
-			  //   var newWeapon = new weapons(Math.floor(Math.random()*(6 - 1 + 1)) + 1);
-			  // weaponCheck(newWeapon);
-		   //   break;
-		}		
-		return;
+				    case "soldier":
+				    // weapons dual = 5,6
+						var newWeapon = new Weapons(randomRoll(6,5));
+						weaponCheck(newWeapon);
+				     break;
+
+				    case "tank":
+					// weapons dual = 5,6
+						var newWeapon = new Weapons(randomRoll(4,3));
+						weaponCheck(newWeapon);
+				     break;
+				     // unable to activate this character
+				     //  case "april":
+				     // god class, all weapons
+					  //   var newWeapon = new weapons(Math.floor(Math.random()*(6 - 1 + 1)) + 1);
+					  // weaponCheck(newWeapon);
+				   //   break;
+				}	
+
+	    	} else if (pass == "no") {
+	    		// gives players a second chance.
+	    		setTimeout(chestNoSubmit(chestW),1000);
+	    	} else {
+				textDialogue(narrator, "Narocube: Try again, maybe a 'yes' or 'no' ", 0);
+	    	}
+	    } else {
+	    	textDialogue(narrator, "Narocube: Please choose an action to take not ' '", 0);
+	    }
+	    return false;
+	});
+}
+
+//checks current weapon and replaces with new
+function weaponCheck (newWeapon) {
+	if (player.weapon.name == "FIST OF FURRY") {
+		player.weaponUpdate(newWeapon);
+
+		textDialogue(narrator, ("Narocube: You have just recieved the " + player.weapon.name + " weapon, which gives you " + player.damage + " damage"), 0);
+
+		advanceStory();
+
 	} else {
-		// gives players a second chance.
-		textDialogue(narrator, "Narocube: Are you sure?");
-		open = confirmSubmit();
+		textDialogue(narrator, ("Narocube: You already have " + " " + player.weapon.name + " with " + player.weapon.damage + " do you wish to replace it with " + newWeapon.name + " with " + newWeapon.damage + "?"), 0);
+		$('form').unbind();
 
-		if (open == true) {
-			textDialogue(narrator, "Narocube: oookay");
-			return;
-		} else {
-			chestW();
-		}
-	}
+		$('form').submit(function() {	
+			var pass = $('#action').val().toLowerCase();
+
+		    if ( pass !== "") {
+		    	if (pass == "yes") {
+		    		textDialogue(narrator, "Narocube: oookay", 0);
+
+		    		player.weaponUpdate(newWeapon);
+					textDialogue(narrator, ("Narocube: You have just recieved the " + player.weapon.name + " weapon, which gives you " + player.weapon.damage + " damage"), 1000);
+
+		    		advanceStory();	
+
+		    	} else if (pass == "no") {
+		    		textDialogue(narrator, "Narocube: Okay, not changing weapons this time.", 0);
+
+		    		advanceStory();	
+		    	} else {
+					textDialogue(narrator, "Narocube: Try again, maybe a 'yes' or 'no' ", 0);
+		    	}
+		    } else {
+		    	textDialogue(narrator, "Narocube: Please choose an action to take not ' '", 0);
+		    }
+		    return false;
+		});
+	} 
 }
 
 // opens item chest
 function chestI () {
-	textDialogue(narrator, "Narocube: would you like to open this Item chest?");
+	textDialogue(narrator, "Narocube: would you like to open this Item chest?", 2000);
 
-	var open = confirm("would you like to open this Item chest?");
-	
-	if (open == true) {
-		if (player.type == 'rouge') {
-			type = randomRoll(2,0);
-		} else {
-			type = randomRoll(1,0);
-		}
-		
-		switch (type) {
-			case 0:
-				textDialogue(narrator, "Narocube: The Chest had an Amulet in it!");
-				items.amulet = new Amulet(randomRoll(3,0));
-				if (Object.getOwnPropertyNames(player.amulet).length = 0) {
-					player.amulet = newAmulet;
-					textDialogue(narrator, "Narocube: You have just recieved the" + player.amulet.name + "amulet \nwhich gives you" +player.amulet.bonus*100 + "% bonus");
+	$('form').unbind();
+
+	$('form').submit(function() { 
+		var pass = $('#action').val().toLowerCase();
+		var items;
+
+		if ( pass !== "") {
+			if (pass == "yes") {
+				if (player.type == 'rouge') {
+					items = randomRoll(2,0);
 				} else {
-					var replaceAmulet = confirm("You already have a" + " " + player.amulet.name + "\n do you wish to replace it with" + newAmulet.name + "with" + newAmulet.bonus*100 + "% bonus");
-					if ( replaceAmulet == true) {
-						player.amulet = newAmulet;
-						textDialogue(narrator, "Narocube: You have just recieved the" + player.amulet.name + "amulet \nwhich gives you" + player.amulet.bonus*100 + "% bonus");
-					} else {
-						return;
-					}
-				} 
-			break;
-
-
-			case 1:
-				alert("The Chest had Armor in it!");
-				items.bodyArmor = new Armor(randomRoll(2,1));
-				if (player.bodyArmor.length = 0) {
-					player.bodyArmor = items.bodyArmor;
-					textDialogue(narrator, "Narocube: You have just recieved the" + player.bodyArmor.name + "Armor \n which gives you" + player.bodyArmor.duration + "duration");
-				} else {	
-					var replaceArmor = confirm("You already have the " + player.bodyArmor.name + "\nDo you wish to replace it with " + newbodyarmor.name + " with " + newbodyarmor.duration+ " duration ?");
-					if ( replaceArmor == true) {
-						player.bodyArmor = newbodyarmor;
-						textDialogue(narrator, "Narocube: You have just recieved the" + player.bodyArmor.name + " \nwhich gives you " + player.bodyArmor.duration + " duration");
-					} else {
-						return;
-					}
-				} 
-			break;
-
-
-			case 2:
-				alert("The Chest had an shield in it!");
-				if (Object.getOwnPropertyNames(player.shield).length = 0) {
-					player.shield = new Armor(0);
-					textDialogue(narrator, "Narocube: You have just recieved the" + player.shield.name + "shield \n which gives you" + player.shield.duration + "hp duration");
-				} else {
-					textDialogue(narrator, "Narocube: Sorry, you already had a shield \n better luck next time!");
-					return;
+					items = randomRoll(1,0);
 				}
-			break;
-		}
 
-	} else {
-		// gives players a second chance.
-		textDialogue(narrator, "Narocube: Are you sure?");
-		open = confirmSubmit();
+				switch (items) {
+					case 0:
+						textDialogue(narrator, "Narocube: The Chest had an Amulet in it!", 0);
+						newAmulet = {};
+						newAmulet = new Amulets(randomRoll(3,0));
 
-		if (open == true) {
-			textDialogue(narrator, "Narocube: oookay");
-			return;
-		} else {
-			chestI();
-		}
-	}
+						if ( isEmpty(player, 'amulet') ) {
+							player.amulet = newAmulet;
+							textDialogue(narrator, ("Narocube: You have just recieved the " + player.amulet.name + " amulet which gives you " + player.amulet.bonus*100 + " % bonus"), 1000);
+							advanceStory();
+
+						} else {
+							textDialogue(narrator, ("Narocube: You already have a " + player.amulet.name + " do you wish to replace it with " + newAmulet.name + " with " + newAmulet.bonus*100 + " % bonus"), 1000);
+							
+							$('form').unbind();
+
+							$('form').submit(function() {	
+								var pass = $('#action').val().toLowerCase();
+
+							    if ( pass !== "") {
+							    	if (pass == "yes") {
+										player.amulet = newAmulet;
+										textDialogue(narrator, ("Narocube: You have just recieved the " + player.amulet.name + " amulet which gives you " + player.amulet.bonus*100 + " % bonus"), 1000);
+										advanceStory();
+							    	} else if (pass == "no") {
+							    		textDialogue(narrator, "Narocube: Okay, not changing Items this time.", 1000);
+							    		advanceStory();
+							    	} else {
+										textDialogue(narrator, "Narocube: Try again, maybe a 'yes' or 'no' ", 1000);
+							    	}
+							    } else {
+							    	textDialogue(narrator, "Narocube: Please choose an action to take not ' '", 1000);
+							    }
+							    return false;
+							});
+						}
+					break;
+
+					case 1:
+						textDialogue(narrator, "Narocube: The Chest had Armor in it!", 0);
+						newbodyArmor = {};
+						newbodyArmor = new Armors(randomRoll(2,1));
+
+						if ( isEmpty(player, 'bodyArmor') ) {
+							player.bodyArmor = newbodyArmor;
+							textDialogue(narrator, ("Narocube: You have just recieved the " + player.bodyArmor.name + " which gives you " + player.bodyArmor.duration + " duration"), 1000);
+							advanceStory();
+
+						} else {	
+							textDialogue(narrator, ("Narocube: You already have the " + player.bodyArmor.name + " Do you wish to replace it with " + newbodyarmor.name + " with " + newbodyarmor.duration + " duration?"), 1000);
+							
+							$('form').unbind();
+
+							$('form').submit(function() {	
+								var pass = $('#action').val().toLowerCase();
+
+							    if ( pass !== "") {
+							    	if (pass == "yes") {
+										player.bodyArmor = newbodyarmor;
+										textDialogue(narrator, ("Narocube: You have just recieved the " + player.bodyArmor.name + " which gives you " + player.bodyArmor.duration + " duration"), 1000);
+										advanceStory();
+							    	} else if (pass == "no") {
+							    		textDialogue(narrator, "Narocube: Okay, not changing Armor this time.", 1000);
+							    		advanceStory();
+							    	} else {
+										textDialogue(narrator, "Narocube: Try again, maybe a 'yes' or 'no' ", 1000);
+							    	}
+							    } else {
+							    	textDialogue(narrator, "Narocube: Please choose an action to take not ' '", 1000);
+							    }
+							    return false;
+							}); 
+						}
+					break;
+
+					case 2:
+						textDialogue(narrator, "Narocube: The Chest had an shield in it!", 0);
+
+						if ( isEmpty(player, 'shield') ) {
+							player.shield = {};
+							player.shield = new Armors(0);
+							textDialogue(narrator, ("Narocube: You have just recieved the " + player.shield.name + " shield which gives you " + player.shield.duration + " hp duration"), 1000);
+							advanceStory();
+						} else {
+							textDialogue(narrator, "Narocube: Sorry, you already had a shield better luck next time!", 1000);
+							advanceStory();
+						}
+
+					break;
+				}
+
+	    	} else if (pass == "no") {
+	    		// gives players a second chance.
+	    		setTimeout(chestNoSubmit(chestI),1000);
+	    	} else {
+				textDialogue(narrator, "Narocube: Try again, maybe a 'yes' or 'no' ", 0);
+	    	}
+	    } else {
+	    	textDialogue(narrator, "Narocube: Please choose an action to take not ' '", 0);
+	    }
+	    return false;
+	});
+}
+			
+// opens Potion chest
+function chestP () {
+	textDialogue(narrator, "Narocube: Would you like to open this Potions chest?", 2000);
+
+	$('form').unbind();
+
+	$('form').submit(function() {
+		var pass = $('#action').val().toLowerCase();
+
+	    if ( pass !== "") {
+	    	if (pass == "yes") {
+				// random roll for Potion item
+				newPotions = {};
+				newPotions = new Potions(randomRoll(2,0));
+
+				if ( isEmpty(player, 'potion') ) {
+					player.potion = newPotions;
+					textDialogue(narrator, ("Narocube: Congradulations you just recieved a " + player.potion.name + " Which can heal you " + player.potion.life + " health."), 0);
+					advanceStory();
+
+				} else {
+					// keep the potion you have?
+					textDialogue(narrator, ("Narocube: You already have a " + player.potion.name + " with " + player.potion.life + " hp do you wish to replace it with " + newPotions.name + " with " + newPotions.life + "?"), 0);
+					
+					$('form').unbind();
+
+					$('form').submit(function() {
+						var pass = $('#action').val().toLowerCase();
+
+					    if ( pass !== "") {
+					    	if (pass == "yes") {
+								player.potion = newPotions;
+								textDialogue(narrator, ("Narocube: Congradulations you just recieved a " + player.potion.name + " Which can heal you " + player.potion.life + " health."), 0);
+								advanceStory();
+					    	} else if (pass == "no") {
+					    		textDialogue(narrator, "Narocube: Okay, not changing Potions this time.", 0);
+					    		advanceStory();
+					    	} else {
+								textDialogue(narrator, "Narocube: Try again, maybe a 'yes' or 'no' ", 0);
+					    	}
+					    } else {
+					    	textDialogue(narrator, "Narocube: Please choose an action to take not ' '", 0);
+					    }
+					    return false;
+					});
+				}
+			} else if (pass == "no") {
+	    		// gives players a second chance.
+	    		setTimeout(chestNoSubmit(chestP),1000);
+	    	} else {
+				textDialogue(narrator, "Narocube: Try again, maybe a 'yes' or 'no' ", 0);
+	    	}
+	    } else {
+	    	textDialogue(narrator, "Narocube: Please choose an action to take not ' '", 0);
+	    }
+	    return false;
+	});
 }
 
-// opens consumable chest
-function chestC () {
-	// confirm opening the chest
-	var open = confirm("would you like to open this consumables chest?");
-	if (open == true) {
-		// random roll for consumable item
-		var newPotion = new Consumables(randomRoll(2,0));
-		if (Object.getOwnPropertyNames(player.consumable).length != 0) {
-			// keep the potion you have?
-			var keepPotion = confirm("You already have a" + " " + player.consumable.name + " with " + player.consumable.life + "hp" + "\n do you wish to replace it with" + newPotion + "with" + newPotion.life + "?");
-			if ( keepPotion == true) {
-				// replaces consumable with new potion
-				player.consumable = newPotion;
-			} else {
-				return;
-			}
-		} else {
-			player.consumable = newPotion;
-			textDialogue(narrator, "Narocube: Congradulations you just recieved a " + player.consumable.name + "\nWhich can heal you " + player.consumable.life + " health");
-		}
-	} else {
-		// gives players a second chance.
-		textDialogue(narrator, "Narocube: Are you sure?");
-		open = confirmSubmit();
+//checks to seee if they are sure and if yes thye continue if not they rerun current function
+function chestNoSubmit(callback){
+	textDialogue(narrator, "Narocube: Are you sure?", 0);
+	$('form').unbind();
 
-		if (open == true) {
-			textDialogue(narrator, "Narocube: oookay");
-			return;
-		} else {
-			chestC();
-		}
-	}
+	$('form').submit(function() {	
+		var pass = $('#action').val().toLowerCase();
+
+	    if ( pass !== "") {
+	    	if (pass == "yes") {
+	    		textDialogue(narrator, "Narocube: oookay", 0);
+
+	    		advanceStory();
+
+	    	} else if (pass == "no") {
+	    		callback();
+
+	    	} else {
+				textDialogue(narrator, "Narocube: Try again, maybe a 'yes' or 'no' ", 0);
+	    	}
+	    } else {
+	    	textDialogue(narrator, "Narocube: Please choose an action to take not ' '", 0);
+	    }
+	    return false;
+	});
 }
-
 
 //////////////////////////////////////////////////////////////////////////////////////////
 //                       monster / fight control functions                              //
 
 //roll for monster or chest
-function chestorMonster(){
+function chestorMonster(callback){
 	var random = randomRoll(10,0);
 	
 	if ( random >= 2){
 		monsterRoll();
+
 	} else{
+		textDialogue(narrator, "Narocube: Hey," + " " + player.name + " you found a Random Chest!", 1000);
 		chestR();
 	}
 }
@@ -513,159 +596,307 @@ function chestorMonster(){
 //roll for which monster monster
 function monsterRoll(){
 	var random = randomRoll(2,0);
+	enemy = {};
 	enemy = new Monster(random);
 }
 
 //decide whether to run or fight monsters
 function fightorflight(){
-	var action = prompt("You have ran across the deadly" + " " + enemy.name + " Do you want to 'fight' or 'run'?").toLowerCase();
-	if (action == 'fight'){
-		fightMonster();
-	} else if (action == 'run') {
-		alert("You right, that shits scary yo. Lets RUN!");
-		if (player.mvspeed > enemy.mvspeed){
-			alert("You're fast enough to loose the" +" " + enemy.name);
-			enemy = {};
-			return;
-		} else {
-			alert("You have to stay and fight the" + " " + enemy.name);
-			fightMonster();
-		}
+	textDialogue(narrator, ("Narocube: You have ran across the deadly " + enemy.name + " Do you want to 'fight' or 'run'?"),2000);
 	
-	} else {
-		alert("Stop tryin to break this game! \n we're all soldiers now!")
-		fightMonster();
-	}
+	$('form').unbind();
+
+	$('form').submit(function() {	
+		var pass = $('#action').val().toLowerCase();
+
+	    if ( pass !== "") {
+	    	if (pass == "fight") {
+	    		textDialogue(player, (player.name + ": Lets kill it!! kill it with fire!!!"), 0);
+				fightMonster();
+
+	    	} else if (pass == "run") {
+	    		textDialogue(narrator, "Narocube: You right, that shits scary yo. Lets RUN!", 0);
+
+	    		if (player.mvspeed >= enemy.mvspeed){
+					textDialogue(narrator, ("Narocube: You're fast enough to loose the " + enemy.name), 1000);
+					enemy = {};
+					advanceStory();
+				} else {
+					textDialogue(narrator, ("Narocube: You have to stay and fight the " + enemy.name), 1000);
+					fightMonster();
+				}
+	    	// } else if ( pass === 'c') {
+	    	// 
+	    	// 	textDialogue(narrator, "Narocube: Now that that is taken care of, maybe try 'go look', 'explore', or 'sit tight'", 0);
+	    	}else {
+				textDialogue(narrator, "Narocube: Stop tryin to break this game! \n we're all soldiers now!", 0)
+				fightMonster();
+	    	}
+	    } else {
+	    	textDialogue(narrator, "Narocube: Please choose an action to take not ' '", 0);
+	    }
+	    return false;
+	});
 }
 
 // If faced with a monster
 function fightMonster(){
 
+	if (enemy.health > 0 && player.health > 0){
+			fight();
+	} else if(enemy.health <= 0) {
+	// Enemy dead
+		textDialogue(narrator, "Narocube: Holy shit you kicked its ass! I mean well done! Onwards!", 0);
+		enemy = {};
+
+		advanceStory();
+	// You dead
+	} else if (player.health <= 0) {
+		dead();//secret way for zombies to get back in the fight, we're all soldiers now.
+	}
+}
+
+
+function fight(atkorder){
 	//global variables
-	var attackorder;
-	var method;
+	var atkorder = 2;
 	var CRhit;
 	var sucess;
 
-	alert("It's fight time. Be brave" + " " + player.name +".");
-	while(enemy.health > 0 && player.health > 0){
-		attackorder = 0;
-
-		if (attackorder == 0){
-			if (player.ranged == true){
-				var method = prompt("You have ranged abilities do you want to use them or melee: 'ranged' or 'melee'").toLowerCase();
-			} else {
-				var method = prompt("Sorry you do not have ranged abilities, get in there and cut em up: 'melee'").toLowerCase();
-			}
-
-
-			CRhit = CRhitRoll(player, enemy); //rolls for critical hit. if damage, comes back true
-
-			if(CRhit == false) {
-				// player attacking enemy
-				sucess = attack(player, enemy);
-					if (sucess == true){
-						alert("You have struck " + " " + enemy.name);
-						alert(enemy.name + "'s new health is" + " " + enemy.health);
-					} else {
-						alert("oh no, you missed!");
-					}
-				attackorder++;
-			} else {
-				textDialogue(narrator, "Narocube: You got a critical hit, you will do 2x damage now!");
-				alert(enemy.name + "'s new health is" + " " + enemy.health);
-				attackorder++;
-			}
-		} else {
-
-			// enemy attacks on odd turns, enemy has much lower chance for CR and player has higher evade
-			CRhit = CRhitRoll(enemy, player); //rolls for critical hit and does damage, no further damage needed
-
-
-			if(CRhit == false) {
-			// enemy attacking player
-				sucess = attack(enemy, player);
-					if (sucess == true){
-						alert("Oh no, the" + " " + enemy.name + " has attacked you!");
-						textDialogue(narrator, "Narocube: Watch out your new health is" + player.health);
-					} else {
-						textDialogue(narrator, "Narocube: It missed you!");
-					}
-				attackorder++;
-
-			} else {
-				alert(enemy.name + " got a critical hit! you will recieve 2x damage now!");
-				textDialogue(narrator, "Narocube: Watch out your new health is" + player.health);
-				attackorder++;
-			}
-		}
-	}
-
-	// Enemy dead
-	if(enemy.health <= 0) {
-
-		alert("You've defeated the" + " " + enemy.name +"! Onwards!");
-		enemy = {};
-		return;
-	// You dead
-	} else if (player.health <= 0) {
-		dead();
-		return;//secret way for zombies to get back in the fight, we're all soldiers now.
-	}
-}
-
-// attacks rolls for attack chance, accounts for evasion chance and deals damamge. 
-// returns true if hit
-function attack(atkobj, defobj) {
-	var hitchance = randomRoll(10,1);
-
-	// if (player.amulet.type == 'evasion') {
-			
-	// } else {
-
-	// }
-
-
-	if ( hitchance >= 1 + defobj.evasion) {
-		
-		if (player.amulet.type == 'damage') {
-			defobj.health -= (atkobj.damge * atkobj.amulet.bonus);
-		} else {
-			defobj.health -= atkobj.damge;
-		}
-
-		return true;
-
+	if (player.ranged == true) {
+		textDialogue(narrator, "Narocube: You have ranged abilities do you want to use them or melee: 'melee' or 'melee'", 2000);
 	} else {
+		textDialogue(narrator, "Narocube: Sorry you do not have ranged abilities, get in there and cut em up: 'melee'", 2000);
+	}
+
+	$('form').unbind();
+
+	$('form').submit(function() {
+		var pass = $('#action').val().toLowerCase();
+
+		if ( pass !== "") {
+	    	if (pass == "melee") {
+	    		bosscheck();
+
+	    		if (atkorder%2 == 0) {
+	
+					CRhit = CRhitRoll(player, enemy, atkorder); //rolls for critical hit. if damage, comes back true
+
+					if( CRhit ) {
+						textDialogue(narrator, "Narocube: You got a critical hit, you will do 2x damage now!", 0);
+						textDialogue(narrator, (enemy.name + "'s new health is " + enemy.health), 1000);
+						atkorder++;
+
+					} else {
+						// player attacking enemy
+						sucess = attack(player, enemy, atkorder);
+
+						if ( sucess ){
+								textDialogue(narrator, ("You have struck " + enemy.name), 0);
+								textDialogue(narrator, (enemy.name + "'s new health is " + enemy.health), 1000);								
+						} else {
+							textDialogue(narrator, "oh no, you missed!", 0);
+						}
+						atkorder++;
+					}	
+				}
+
+				if(enemy.health <= 0){
+					fightMonster();
+				}
+
+				if (atkorder%2 != 0 && enemy.health > 0) {
+					// enemy attacks on odd turns, enemy has much lower chance for CR and player has higher evade
+					CRhit = CRhitRoll(enemy, player, atkorder); //rolls for critical hit and does damage, no further damage needed
+
+					if( CRhit ) {
+						textDialogue(narrator, (enemy.name + ": got a critical hit! you will recieve 2x damage now!"), 2000);
+						textDialogue(narrator, ("Narocube: Watch out your new health is " + player.health), 3000);
+						atkorder++;
+						fightMonster();
+					} else {
+						// enemy attacking player
+						sucess = attack(enemy, player, atkorder);
+
+						if ( sucess ) {
+							textDialogue(narrator, ("Oh no, the " + enemy.name + " has attacked you!"), 2000);
+							textDialogue(narrator, ("Narocube: Watch out your new health is " + player.health), 3000);
+						} else {
+							textDialogue(narrator, "Narocube: It missed you!", 2000);
+						}
+						atkorder++;
+						fightMonster();
+					}
+				}
+
+	//  	} else if (pass == "ranged") {
+    // 		if (player.ranged == true) {
+
+				// if (enemy.health > 0 && player.health > 0) {
+				// 	atkorder = 2;
+
+				// 	if (atkorder%2 == 0) {
+			
+				// 		CRhit = CRhitRoll(player, enemy, atkorder); //rolls for critical hit. if damage, comes back true
+
+				// 		if( CRhit ) {
+				// 			textDialogue(narrator, "Narocube: You got a critical hit, you will do 2x damage now!", 0);
+				// 			textDialogue(narrator, (enemy.name + "'s new health is " + enemy.health), 0);
+				// 			atkorder++;
+
+				// 		} else {
+				// 			// player attacking enemy
+				// 			sucess = attack(player, enemy, atkorder);
+
+				// 			if ( sucess ){
+				// 					textDialogue(narrator, ("You have struck " + enemy.name), 0);
+				// 					textDialogue(narrator, (enemy.name + "'s new health is " + enemy.health) ,0);								
+				// 			} else {
+				// 				textDialogue(narrator, "oh no, you missed!", 0);
+				// 			}
+				// 			atkorder++;
+				// 		}	
+				// 	} else if (atkorder%2 != 0 && enemy.health > 0) {
+				// 		// enemy attacks on odd turns, enemy has much lower chance for CR and player has higher evade
+				// 		CRhit = CRhitRoll(enemy, player, atkorder); //rolls for critical hit and does damage, no further damage needed
+
+				// 		if( CRhit ) {
+				// 			textDialogue(narrator, (enemy.name + ": got a critical hit! you will recieve 2x damage now!"), 0);
+				// 			textDialogue(narrator, ("Narocube: Watch out your new health is " + player.health), 0);
+				// 			atkorder++;
+				// 		} else {
+				// 			// enemy attacking player
+				// 			sucess = attack(enemy, player, atkorder);
+
+				// 			if ( sucess ) {
+				// 				textDialogue(narrator, ("Oh no, the " + enemy.name + " has attacked you!"), 0);
+				// 				textDialogue(narrator, ("Narocube: Watch out your new health is " + player.health), 0);
+				// 			} else {
+				// 				textDialogue(narrator, "Narocube: It missed you!", 0);
+				// 			}
+				// 			atkorder++;
+				// 		}
+				// 	}
+
+				// 	// Enemy dead
+				// 	if(enemy.health <= 0) {
+				// 		textDialogue(narrator, "Narocube: Holy shit you kicked its ass! I mean well done! Onwards!", 0);
+				// 		enemy = {};
+				// 		advanceStory();
+				// 	// You dead
+				// 	} else if (player.health <= 0) {
+				// 		dead();//secret way for zombies to get back in the fight, we're all soldiers now.
+				// 	}
+				// }
+    // 		} else {
+    // 			textDialogue(narrator, "Narocube: Sorry you do not have ranged abilities, get in there and cut em up: 'melee'", 0);
+    // 		}
+	    	} else {
+	    		textDialogue(narrator,  "Narocube: Try again, maybe 'melee', or 'melee'", 0);
+	    	}
+	    } else{
+	    	textDialogue(narrator, "Narocube: Please choose an action to take not ' '", 0);
+	    }
 
 		return false;
+	});
+
+}
+
+
+function bosscheck(){
+	if (enemy.name == "THE DEMIGORGON" && enemy.health <= (.5 * enemy.maxhp) && johnfirst){
+		textDialogue(john,"John: Hey! Let me get a shot on her!", 0);
+		enemy.health -= john.damage;
+		textDialogue(john,"John: Alright, direct hit!", 8000);
+		textDialogue(narrator, ("Narocube: Oh wow the queens life is now" + enemy.health), 9000);	
+		textDialogue(enemy, (enemy.name + ": OH, I GUESS THAT STINGS"), 10000);
+		john.johnfirst = false;
 	}
 }
+								
+
+// attacks rolls for attack chance, accounts for evasion chance and deals damage. 
+// returns true if hit
+function attack(atkobj, defobj, atkorder) {
+	var hitchance = randomRoll(10,1);
+
+	switch(atkorder%2){
+		case 0: //player attack
+
+			if (atkobj.amulet.type == 'damage'){
+				var atkdmg = atkobj.damage * atkobj.amulet.bonus;
+			} else {
+				var atkdmg = atkobj.damage;
+			}
+
+			if ( hitchance >= 1 + defobj.evasion) {
+				defobj.health -= atkdmg;
+				return true;
+			} else {
+				return false;
+			}
+		break;
+
+		case 1: // monster attack
+
+			if (player.amulet.type == 'evasion') {
+				var defeva = defobj.evasion * defobj.amulet.bonus;
+			} else {
+				var defeva = defobj.evasion;
+			}
+
+			if ( hitchance >= 1 + defeva) {
+				defobj.health -= atkobj.damage;
+				return true;
+			} else {
+				return false;
+			}
+		break;
+	}
+}
+
 
 // checks to see if you get a chritical hit, and does damage
 // returns true if hit
-function CRhitRoll(atkobj, defobj) {
+function CRhitRoll(atkobj, defobj, atkorder) {
 	var criticalChance = randomRoll(10,1);
+	var hitchance = randomRoll(10,1);
 	var CRbonus = 2;
 
-	// if (player.amulet.type == 'critical') {
-			
-	// } else {
-		
-	// }
+	switch(atkorder%2){
+		case 0: //player attack
+			var atkdmg = atkobj.damage;
+			var atkcrh = atkobj.criticalHit;
 
-	if (criticalChance <= 1 + atkobj.criticalHit) { //criticalHit is a %likely to land
+			if (player.amulet.type === 'damage'){
+				atkdmg = atkobj.damage * atkobj.amulet.bonus;
+			} else if (player.amulet.type === 'critical'){
+				atkcrh = atkobj.criticalHit * atkobj.amulet.bonus;
+			}
 
-		if (player.amulet.type == 'damage') {
-			defobj.health -= (atkobj.damge * atkobj.amulet.bonus * CRbonus);
-		} else {
-			defobj.health -= atkobj.damge * CRbonus ;
-		}
-		return true;
+			if (criticalChance <= (1 + atkcrh) && hitchance >= (1 + defobj.evasion)) { //criticalHit is a %likely to land
+				defobj.health -= atkdmg * CRbonus ;
+				return true;
+			} else {
+				return false;
+			}
+		break;
 
-	} else {
-		return false;
+		case 1: // monster attack
+			var defeva = defobj.evasion;
+			if (player.amulet.type == 'evasion') {
+				defeva = defobj.evasion * defobj.amulet.bonus;
+			}  
 
+
+			if (criticalChance <= (1 + atkobj.criticalHit) && hitchance >= (1 + defeva)) {
+				defobj.health -= atkobj.damage*CRbonus;
+				return true;
+			} else {
+				return false;
+			}
+		break;
 	}
 }
 
@@ -677,4 +908,44 @@ function CRhitRoll(atkobj, defobj) {
 function randomRoll(max, min){
 	var num = Math.floor(Math.random() * (max - min +1)) + min;
 	return num;
+}
+
+// function that determines if an object inside another object is empty
+function isEmpty(obj, propName) {
+   return Object.keys(obj[propName]).length == 0;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////
+// 									Game level dynamics									//
+
+
+function resetgame(){//RESTARTING variables
+
+	var gameobj = {sittight:0, // counter for sittin tight through game
+					 explore:0, // counter to determine number of times explore is choosen
+					  upstiars:false, // counter not used yet
+					    submitval:'',
+					     storyPoint:0,}; // counter to progress game through 'levels'
+
+		//item preload for game use
+	var amulet = {};
+	var bodyArmor = {};
+	var shield = {};
+	var Potion = {};
+
+
+					//character initiation
+	var player = {voice: 'white'};	// active player
+	var enemy = {};					// Empty monster object, when defeated it empties and allows next monster to populate
+	var john = {};                  // John character to help you fight boss
+	var narrator = {voice: 'blue'};
+
+	// wait 3 seconds and rerun initial game.
+	setTimeout(mainLoop, 3000);
+}
+
+function advanceStory(){
+	gameobj.storyPoint++;
+	$('form').unbind();
+	mainLoop();
 }
