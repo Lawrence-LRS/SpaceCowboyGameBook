@@ -921,24 +921,24 @@ function isEmpty(obj, propName) {
 
 function resetgame(){//RESTARTING variables
 
-	var gameobj = {sittight:0, // counter for sittin tight through game
+	gameobj = {sittight:0, // counter for sittin tight through game
 					 explore:0, // counter to determine number of times explore is choosen
 					  upstiars:false, // counter not used yet
 					    submitval:'',
 					     storyPoint:0,}; // counter to progress game through 'levels'
 
 		//item preload for game use
-	var amulet = {};
-	var bodyArmor = {};
-	var shield = {};
-	var Potion = {};
+	amulet = {};
+	bodyArmor = {};
+	shield = {};
+	Potion = {};
 
 
 					//character initiation
-	var player = {voice: 'white'};	// active player
-	var enemy = {};					// Empty monster object, when defeated it empties and allows next monster to populate
-	var john = {};                  // John character to help you fight boss
-	var narrator = {voice: 'blue'};
+	player = {voice: 'white'};	// active player
+	enemy = {};					// Empty monster object, when defeated it empties and allows next monster to populate
+	john = {};                  // John character to help you fight boss
+	narrator = {voice: 'blue'};
 
 	// wait 3 seconds and rerun initial game.
 	setTimeout(mainLoop, 3000);
